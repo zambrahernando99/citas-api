@@ -2,7 +2,12 @@
 
 ## Estado verificado del repositorio
 
-Al crear este archivo, el repositorio contiene documentación, ejemplos de entorno y briefs n8n, pero aún no tiene `pom.xml`, Maven Wrapper, código Java, migraciones Flyway ni pruebas. Existe el directorio `docs/wiki/scrum/`, pero no contiene especificaciones ni HU/DoD aprobadas. Por ello no se asumen paquetes Java, nombres de módulos, endpoints, perfiles, comandos de prueba ni HU aprobadas. Actualizar este apartado tras el bootstrap real de Spring Boot.
+El bootstrap de Spring Boot para HU-001 y HU-002 existe desde 2026-09-17. `pom.xml` declara Java 21 y Spring Boot 3.5.0; hay código, migración Flyway, pruebas y `.env.example` sin secretos. Las HU-001 y HU-002 figuran como aprobadas; las demás HU no se implementan en este incremento.
+
+- Paquete raíz decidido tras la inspección del repositorio: `co.academy.citas`.
+- Dominio: `domain`; casos de uso y puertos: `application`; REST/seguridad: `adapter.in`; JPA/JWT/hash: `adapter.out`.
+- La migración `V1__create_identity_and_sessions.sql` crea roles, usuarios, relación N:M de roles y sesiones de refresh normalizadas.
+- Verificación ejecutada: `mvn test` (Maven 3.9.9 en un directorio temporal ignorado porque el host no tenía Maven en `PATH`), con 9 pruebas en verde. El compilador se ejecutó con `--release 21`.
 
 ## Responsabilidad
 
@@ -47,7 +52,7 @@ Estas reglas provienen de `../PRD.md`; ante estados, retenciones, concurrencia o
 2. Identificar reglas de PRD, datos, seguridad y contrato REST afectados.
 3. Antes de editar, publicar un plan que enumere archivos backend, migraciones y pruebas previstos.
 4. Implementar el mínimo coherente respetando límites hexagonales.
-5. Ejecutar las pruebas relevantes disponibles. Tras el bootstrap, registrar aquí los comandos Maven reales y los perfiles requeridos.
+5. Ejecutar las pruebas relevantes disponibles. Para HU-001/HU-002 el comando verificado es `mvn test`; la aplicación no define perfiles propios.
 6. Verificar arquitectura, migraciones, contrato y DoD; distinguir evidencia ejecutada de aspectos no verificados.
 7. Si cambia REST, coordinar con el orquestador para actualizar contrato y exigir evidencia del consumidor web, sin modificar `citas-web` desde aquí.
 

@@ -183,6 +183,7 @@
   },
   "active": "67f327a068fa253a",
   "lastOpenFiles": [
+    "scrum.zip",
     "scrum/historias-de-usuario/HU-028-auditar-cambios-de-estado.md",
     "scrum/historias-de-usuario/HU-027-consultar-bandeja-administrativa.md",
     "scrum/historias-de-usuario/HU-026-cerrar-atencion.md",
@@ -207,7 +208,6 @@
     "scrum/historias-de-usuario/HU-007-consultar-catalogos-fijos.md",
     "scrum/historias-de-usuario/HU-006-gestionar-afiliacion.md",
     "scrum/historias-de-usuario/HU-005-consultar-y-actualizar-perfil.md",
-    "scrum/historias-de-usuario/HU-004-autorizar-por-rol-y-propiedad.md",
-    "scrum/historias-de-usuario/HU-003-recuperar-contrasena.md"
+    "scrum/historias-de-usuario/HU-004-autorizar-por-rol-y-propiedad.md"
   ]
 }

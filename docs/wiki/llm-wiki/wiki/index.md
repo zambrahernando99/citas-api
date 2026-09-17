@@ -2,7 +2,7 @@
 
 ## Estado
 
-Inicializada el 2026-09-17. El corte inicial integra especificaciones del laboratorio; no hay implementación de aplicación todavía.
+ Inicializada el 2026-09-17. El corte inicial integra especificaciones del laboratorio. HU-001 y HU-002 fueron aprobadas para su implementación; las demás capacidades permanecen sin implementación.
 
 ## Páginas
 

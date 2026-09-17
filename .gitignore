@@ -1,8 +1,5 @@
-.env
-.env.*
-!.env.example
 target/
-.idea/
-.vscode/
-*.iml
+.tools/
+.mvn/wrapper/maven-wrapper.jar
+.env
 *.log

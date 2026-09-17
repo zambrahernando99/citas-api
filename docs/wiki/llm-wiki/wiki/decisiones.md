@@ -15,3 +15,11 @@
 - Decisión: excluir `database/reference/` del INGEST inicial.
 - Consecuencia: el diseño del estudiante parte del PRD y requisitos 3FN; la comparación ocurre cuando el trainer la autorice.
 - Evidencia de aprobación: instrucciones del workspace y corte inicial aprobado.
+
+## DEC-003 — Sesiones JWT de HU-002
+
+- Estado: aprobada.
+- Fecha: 2026-09-17.
+- Decisión: access JWT de 15 minutos y refresh JWT de 7 días, ambos configurados exclusivamente por variables de entorno; el refresh se rota y revoca por sesión.
+- Consecuencia: se persiste por sesión únicamente un identificador no secreto, su hash de token, revocación y expiración. No se persiste el refresh crudo. La renovación revoca atómicamente el token presentado y emite un par nuevo; logout revoca sólo esa sesión.
+- Evidencia de aprobación: instrucción explícita del usuario al aprobar HU-001/HU-002 y solicitar su implementación.

@@ -2,7 +2,7 @@
 id: HU-001
 tipo: historia-de-usuario
 titulo: Registrar USER
-estado: Pendiente de aprobación
+estado: Aprobada
 epica: "[[EP-001-acceso-e-identidad]]"
 esfuerzo: Medio
 sprint_sugerido: S2
@@ -29,8 +29,8 @@ Solicita nombres, apellidos, tipo/número de documento, email, teléfono y contr
 ## Esfuerzo
 **Nivel:** Medio. **Justificación de dificultad:** valida identidad, unicidad y seguridad entre contrato, dominio y persistencia.
 ## Tareas de desarrollo
-- [ ] **T-01 — Definir contrato y validaciones.** Dificultad: Medio. Documentar datos requeridos y errores observables.
-- [ ] **T-02 — Implementar registro persistente.** Dificultad: Medio. Aplicar hash, unicidades y pruebas relevantes.
+- [x] **T-01 — Definir contrato y validaciones.** Dificultad: Medio. Documentar datos requeridos y errores observables.
+- [x] **T-02 — Implementar registro persistente.** Dificultad: Medio. Aplicar hash, unicidades y pruebas relevantes.
 ## Criterios de aceptación
 ### CA-01 — Registro válido
 **Dado** un visitante con todos los datos mínimos válidos **cuando** se registra **entonces** se crea una cuenta con rol USER.
@@ -39,16 +39,21 @@ Solicita nombres, apellidos, tipo/número de documento, email, teléfono y contr
 ### CA-03 — Protección de contraseña
 **Dado** cualquier registro **cuando** se persiste o responde **entonces** la contraseña no aparece en texto plano.
 ## Definition of Done
-- [ ] CA-01 a CA-03 validados con evidencia.
-- [ ] Contrato REST y validación server-side coherentes; UI consume REST directo.
-- [ ] Migración Flyway coherente si el modelo requiere nuevas estructuras; pruebas relevantes disponibles.
-- [ ] Trazabilidad Scrum actualizada.
+- [x] CA-01 a CA-03 validados con evidencia backend.
+- [x] Contrato REST y validación server-side coherentes.
+- [ ] UI consume REST directo. Pendiente de validación en `citas-web`; fuera de este cambio.
+- [x] Migración Flyway coherente y pruebas relevantes disponibles.
+- [x] Trazabilidad Scrum actualizada.
 ## Evidencia de validación
 | Elemento | Resultado | Evidencia | Observación |
 |---|---|---|---|
-| CA-01 a CA-03 | Pendiente | — | HU no implementada |
-| DoD | Pendiente | — | — |
+| CA-01 | Validado backend | `AuthFlowIntegrationTest#registersUserWithOnlyUserRoleAndNeverReturnsOrPersistsRawPassword` | Registro 201 y rol exclusivo USER |
+| CA-02 | Validado backend | `AuthFlowIntegrationTest#rejectsDuplicateEmailAndDocumentWithoutCreatingAnotherAccount` | 409 sin segunda cuenta |
+| CA-03 | Validado backend | Misma prueba CA-01 y `RegistrationServiceTest` | BCrypt en persistencia y sin password en respuesta |
+| DoD backend | Validado | `mvn test`: 9 pruebas, 0 fallos | UI/cross-repo permanecen pendientes |
 ## Historial de validación
 - 2026-09-17 — Recreada con skill en `Pendiente de aprobación`.
+- 2026-09-17 — Aprobada para implementación por autorización explícita del usuario.
+- 2026-09-17 — Implementación backend validada mediante `mvn test`; consumo UI y validación cross-repo pendientes.
 ## Notas y decisiones
 - Datos exclusivamente sintéticos.
