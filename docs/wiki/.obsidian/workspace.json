@@ -1,0 +1,213 @@
+{
+  "main": {
+    "id": "3974c63d55892778",
+    "type": "split",
+    "children": [
+      {
+        "id": "cd9f515d14a9ef13",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "67f327a068fa253a",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Vista gráfica"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "5a497ee5b79c7fde",
+    "type": "split",
+    "children": [
+      {
+        "id": "468b7e2c0c0bc6b2",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "deab1f40813a6b37",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorador de archivos"
+            }
+          },
+          {
+            "id": "b6323d1f9ba51cda",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Buscar"
+            }
+          },
+          {
+            "id": "b036fd61e7a8061c",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "Marcadores"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "07401dda3b8fa0ac",
+    "type": "split",
+    "children": [
+      {
+        "id": "a208f15dfb1ce53e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3b213fcae2ae7cc0",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Enlaces entrantes"
+            }
+          },
+          {
+            "id": "e38f884465b92c55",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Enlaces salientes"
+            }
+          },
+          {
+            "id": "166c81242b68c9d2",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Etiquetas"
+            }
+          },
+          {
+            "id": "be41f7276a38371d",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Todas las propiedades"
+            }
+          },
+          {
+            "id": "71305d55babd4a11",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Esquema"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Abrir selector rápido": false,
+      "graph:Abrir vista gráfica": false,
+      "canvas:Crear nuevo lienzo": false,
+      "daily-notes:Abrir la nota de hoy": false,
+      "templates:Insertar plantilla": false,
+      "command-palette:Abrir paleta de comandos": false,
+      "bases:Crear nueva base": false
+    }
+  },
+  "active": "67f327a068fa253a",
+  "lastOpenFiles": [
+    "scrum/historias-de-usuario/HU-028-auditar-cambios-de-estado.md",
+    "scrum/historias-de-usuario/HU-027-consultar-bandeja-administrativa.md",
+    "scrum/historias-de-usuario/HU-026-cerrar-atencion.md",
+    "scrum/historias-de-usuario/HU-025-consultar-agenda-profesional.md",
+    "scrum/historias-de-usuario/HU-024-decidir-reprogramacion.md",
+    "scrum/historias-de-usuario/HU-023-decidir-cita-especializada.md",
+    "scrum/historias-de-usuario/HU-022-solicitar-reprogramacion.md",
+    "scrum/historias-de-usuario/HU-021-cancelar-cita.md",
+    "scrum/historias-de-usuario/HU-020-consultar-mis-citas.md",
+    "scrum/historias-de-usuario/HU-019-solicitar-cita-especializada.md",
+    "scrum/historias-de-usuario/HU-018-reservar-cita-general.md",
+    "scrum/historias-de-usuario/HU-017-buscar-disponibilidad.md",
+    "scrum/historias-de-usuario/HU-016-consultar-calendario-profesional.md",
+    "scrum/historias-de-usuario/HU-015-modificar-bloques-futuros.md",
+    "scrum/historias-de-usuario/HU-014-crear-bloques-disponibilidad.md",
+    "scrum/historias-de-usuario/HU-013-activar-profesional.md",
+    "scrum/historias-de-usuario/HU-012-asignar-especialidades-y-sedes.md",
+    "scrum/historias-de-usuario/HU-011-crear-profesional.md",
+    "scrum/historias-de-usuario/HU-010-administrar-especialidades.md",
+    "scrum/historias-de-usuario/HU-009-administrar-planes-eps.md",
+    "scrum/historias-de-usuario/HU-008-administrar-eps.md",
+    "scrum/historias-de-usuario/HU-007-consultar-catalogos-fijos.md",
+    "scrum/historias-de-usuario/HU-006-gestionar-afiliacion.md",
+    "scrum/historias-de-usuario/HU-005-consultar-y-actualizar-perfil.md",
+    "scrum/historias-de-usuario/HU-004-autorizar-por-rol-y-propiedad.md",
+    "scrum/historias-de-usuario/HU-003-recuperar-contrasena.md"
+  ]
+}
