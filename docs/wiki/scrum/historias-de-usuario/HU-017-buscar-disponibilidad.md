@@ -2,7 +2,7 @@
 id: HU-017
 tipo: historia-de-usuario
 titulo: Buscar disponibilidad
-estado: Pendiente de aprobación
+estado: Aprobada
 epica: "[[EP-003-oferta-profesional-y-disponibilidad]]"
 esfuerzo: Alto
 sprint_sugerido: S4

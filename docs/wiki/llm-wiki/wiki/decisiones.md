@@ -23,3 +23,11 @@
 - Decisión: access JWT de 15 minutos y refresh JWT de 7 días, ambos configurados exclusivamente por variables de entorno; el refresh se rota y revoca por sesión.
 - Consecuencia: se persiste por sesión únicamente un identificador no secreto, su hash de token, revocación y expiración. No se persiste el refresh crudo. La renovación revoca atómicamente el token presentado y emite un par nuevo; logout revoca sólo esa sesión.
 - Evidencia de aprobación: instrucción explícita del usuario al aprobar HU-001/HU-002 y solicitar su implementación.
+
+## DEC-004 — Aprobación del backlog de historias de usuario
+
+- Estado: aprobada.
+- Fecha: 2026-09-22.
+- Decisión: aprobar las HU-001 a HU-028 para su planificación e implementación.
+- Consecuencia: cada HU puede pasar a implementación cuando se seleccione para un incremento; la aprobación no altera su DoD ni equivale a implementación, validación o completitud.
+- Evidencia de aprobación: instrucción explícita del usuario: “Puedes aprobar todas las HU”.

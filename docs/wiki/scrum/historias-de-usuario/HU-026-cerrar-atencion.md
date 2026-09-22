@@ -2,7 +2,7 @@
 id: HU-026
 tipo: historia-de-usuario
 titulo: Cerrar atención
-estado: Pendiente de aprobación
+estado: Aprobada
 epica: "[[EP-006-operacion-y-auditoria]]"
 esfuerzo: Medio
 sprint_sugerido: S6

@@ -2,7 +2,7 @@
 id: HU-015
 tipo: historia-de-usuario
 titulo: Modificar bloques futuros
-estado: Pendiente de aprobación
+estado: Aprobada
 epica: "[[EP-003-oferta-profesional-y-disponibilidad]]"
 esfuerzo: Medio
 sprint_sugerido: S4

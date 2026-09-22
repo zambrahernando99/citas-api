@@ -2,7 +2,7 @@
 id: HU-023
 tipo: historia-de-usuario
 titulo: Decidir cita especializada
-estado: Pendiente de aprobación
+estado: Aprobada
 epica: "[[EP-005-ciclo-de-vida-de-citas]]"
 esfuerzo: Medio
 sprint_sugerido: S5

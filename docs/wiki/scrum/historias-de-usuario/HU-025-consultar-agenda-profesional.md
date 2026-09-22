@@ -2,7 +2,7 @@
 id: HU-025
 tipo: historia-de-usuario
 titulo: Consultar agenda profesional
-estado: Pendiente de aprobación
+estado: Aprobada
 epica: "[[EP-006-operacion-y-auditoria]]"
 esfuerzo: Medio
 sprint_sugerido: S6

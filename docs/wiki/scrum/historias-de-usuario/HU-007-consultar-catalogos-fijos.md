@@ -2,7 +2,7 @@
 id: HU-007
 tipo: historia-de-usuario
 titulo: Consultar catálogos fijos
-estado: Pendiente de aprobación
+estado: Aprobada
 epica: "[[EP-002-perfil-y-catalogos]]"
 esfuerzo: Medio
 sprint_sugerido: S3

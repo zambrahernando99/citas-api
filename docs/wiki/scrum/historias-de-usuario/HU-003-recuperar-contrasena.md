@@ -2,7 +2,7 @@
 id: HU-003
 tipo: historia-de-usuario
 titulo: Recuperar contraseña
-estado: Pendiente de aprobación
+estado: Aprobada
 epica: "[[EP-001-acceso-e-identidad]]"
 esfuerzo: Medio
 sprint_sugerido: S2

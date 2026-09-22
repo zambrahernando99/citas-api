@@ -2,7 +2,7 @@
 id: HU-016
 tipo: historia-de-usuario
 titulo: Consultar calendario profesional
-estado: Pendiente de aprobación
+estado: Aprobada
 epica: "[[EP-003-oferta-profesional-y-disponibilidad]]"
 esfuerzo: Bajo
 sprint_sugerido: S4

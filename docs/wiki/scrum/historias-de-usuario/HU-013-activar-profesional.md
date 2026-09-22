@@ -2,7 +2,7 @@
 id: HU-013
 tipo: historia-de-usuario
 titulo: Activar profesional
-estado: Pendiente de aprobación
+estado: Aprobada
 epica: "[[EP-003-oferta-profesional-y-disponibilidad]]"
 esfuerzo: Bajo
 sprint_sugerido: S3

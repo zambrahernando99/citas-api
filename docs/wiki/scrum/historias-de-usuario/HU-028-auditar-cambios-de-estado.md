@@ -2,7 +2,7 @@
 id: HU-028
 tipo: historia-de-usuario
 titulo: Auditar cambios de estado
-estado: Pendiente de aprobación
+estado: Aprobada
 epica: "[[EP-006-operacion-y-auditoria]]"
 esfuerzo: Alto
 sprint_sugerido: S4

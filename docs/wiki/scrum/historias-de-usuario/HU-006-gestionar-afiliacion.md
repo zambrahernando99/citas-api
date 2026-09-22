@@ -2,7 +2,7 @@
 id: HU-006
 tipo: historia-de-usuario
 titulo: Gestionar afiliación
-estado: Pendiente de aprobación
+estado: Aprobada
 epica: "[[EP-002-perfil-y-catalogos]]"
 esfuerzo: Medio
 sprint_sugerido: S3

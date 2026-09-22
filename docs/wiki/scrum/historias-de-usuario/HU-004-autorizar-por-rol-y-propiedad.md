@@ -2,7 +2,7 @@
 id: HU-004
 tipo: historia-de-usuario
 titulo: Autorizar por rol y propiedad
-estado: Pendiente de aprobación
+estado: Aprobada
 epica: "[[EP-001-acceso-e-identidad]]"
 esfuerzo: Alto
 sprint_sugerido: S2

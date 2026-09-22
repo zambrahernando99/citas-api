@@ -2,7 +2,7 @@
 id: HU-019
 tipo: historia-de-usuario
 titulo: Solicitar cita especializada
-estado: Pendiente de aprobación
+estado: Aprobada
 epica: "[[EP-004-reserva-y-consulta-de-citas]]"
 esfuerzo: Alto
 sprint_sugerido: S4

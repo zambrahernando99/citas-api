@@ -2,7 +2,7 @@
 id: HU-020
 tipo: historia-de-usuario
 titulo: Consultar mis citas
-estado: Pendiente de aprobación
+estado: Aprobada
 epica: "[[EP-004-reserva-y-consulta-de-citas]]"
 esfuerzo: Bajo
 sprint_sugerido: S4

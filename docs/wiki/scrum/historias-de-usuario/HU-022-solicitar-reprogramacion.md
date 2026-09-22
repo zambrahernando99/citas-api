@@ -2,7 +2,7 @@
 id: HU-022
 tipo: historia-de-usuario
 titulo: Solicitar reprogramación
-estado: Pendiente de aprobación
+estado: Aprobada
 epica: "[[EP-005-ciclo-de-vida-de-citas]]"
 esfuerzo: Alto
 sprint_sugerido: S5

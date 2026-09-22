@@ -2,7 +2,7 @@
 
 ## Estado del mapa
 
-Todo el contenido está en estado `Pendiente de aprobación`. No existe ninguna HU aprobada, en desarrollo, validación o completada. Este mapa usa exclusivamente `PRD.md`, `RESTRICCIONES_TECNICAS.md` y `database/REQUISITOS_NORMALIZACION_3FN.md`; no prescribe código, endpoints, tablas ni componentes no definidos.
+Las HU-001 a HU-028 están en estado `Aprobada` por autorización explícita del usuario el 2026-09-22. La aprobación habilita su planificación e implementación, pero no declara ninguna HU como desarrollada, validada o completada. Este mapa usa exclusivamente `PRD.md`, `RESTRICCIONES_TECNICAS.md` y `database/REQUISITOS_NORMALIZACION_3FN.md`; no prescribe código, endpoints, tablas ni componentes no definidos.
 
 ## Stack y límites detectados
 

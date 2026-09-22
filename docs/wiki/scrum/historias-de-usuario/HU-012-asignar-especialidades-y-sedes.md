@@ -2,7 +2,7 @@
 id: HU-012
 tipo: historia-de-usuario
 titulo: Asignar especialidades y sedes
-estado: Pendiente de aprobación
+estado: Aprobada
 epica: "[[EP-003-oferta-profesional-y-disponibilidad]]"
 esfuerzo: Medio
 sprint_sugerido: S3
