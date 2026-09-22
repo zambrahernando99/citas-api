@@ -20,5 +20,5 @@
 
 - `docker compose ps` confirmó MySQL 8.4 saludable y el contenedor Java 21 disponible. La API arrancó contra MySQL, aplicó/validó Flyway y respondió `200 {"status":"UP"}` en Actuator.
 - `docker compose exec -T citas-api-dev mvn test` ejecutó 9 pruebas: 6 REST/persistencia, 1 JWT y 2 de registro; todas terminaron sin fallos ni errores.
-- Flujo REST controlado, con datos exclusivamente sintéticos: preflight CORS para `http://localhost:3000`; registro `201`; login con access/refresh; rotación de refresh; logout `204`. No se registraron ni versionaron tokens o contraseñas.
+- Flujo REST controlado, con datos exclusivamente sintéticos: preflight CORS para `http://localhost:5173`; registro `201`; login con access/refresh; rotación de refresh; logout `204`. No se registraron ni versionaron tokens o contraseñas.
 - En `citas-web`, `npm run lint` y `npm run build` finalizaron correctamente. El formulario de registro/login usa el contrato REST v1 y muestra errores observables del servidor.

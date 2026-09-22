@@ -87,5 +87,5 @@ Los detalles de refresh no distinguen causa para no revelar estado de sesión.
 ### Validación cross-repo S2
 
 - 2026-09-22 — `citas-web` implementó el cliente directo de registro, login y logout mediante `VITE_API_URL`; no existe BFF ni almacenamiento persistente de tokens.
-- 2026-09-22 — Con MySQL 8.4 y la API en ejecución se verificó el preflight CORS para `http://localhost:3000`, registro `201`, login con access/refresh, rotación de refresh y logout `204`, usando únicamente una cuenta sintética de prueba.
+- 2026-09-22 — Con MySQL 8.4 y la API en ejecución se verificó el preflight CORS para `http://localhost:5173`, registro `201`, login con access/refresh, rotación de refresh y logout `204`, usando únicamente cuentas sintéticas de prueba.
 - El frontend representa el `detail` de respuestas `application/problem+json`; los flujos de recuperación, ownership y las HU posteriores siguen fuera de alcance S2.
