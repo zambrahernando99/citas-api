@@ -22,3 +22,9 @@
 - `docker compose exec -T citas-api-dev mvn test` ejecutó 9 pruebas: 6 REST/persistencia, 1 JWT y 2 de registro; todas terminaron sin fallos ni errores.
 - Flujo REST controlado, con datos exclusivamente sintéticos: preflight CORS para `http://localhost:5173`; registro `201`; login con access/refresh; rotación de refresh; logout `204`. No se registraron ni versionaron tokens o contraseñas.
 - En `citas-web`, `npm run lint` y `npm run build` finalizaron correctamente. El formulario de registro/login usa el contrato REST v1 y muestra errores observables del servidor.
+
+## EVIDENCIA — Inicialización desde esquema de referencia (2026-09-22)
+
+- Tras la autorización explícita del usuario, el volumen MySQL se recreó con `database/reference/db.sql` montado de solo lectura en el inicializador oficial de MySQL.
+- Verificado en MySQL: 3 roles, 15 usuarios, 3 citas y 224 slots del esquema de referencia. Flyway registró baseline `0` y V1 correcta; el backend mantiene las tablas de autenticación S2 como compatibilidad transitoria.
+- Health API devolvió `200`; un registro/login sintético sobre esa misma base devolvió `201` y tokens separados; `mvn test` completó 9 pruebas sin fallos ni errores.

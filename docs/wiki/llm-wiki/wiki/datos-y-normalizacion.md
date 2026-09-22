@@ -12,4 +12,8 @@
 - Representación física de slots y de las retenciones pendientes.
 - Datos por snapshot frente a FK en citas y reprogramaciones.
 
+## DECISIÓN DE IMPLEMENTACIÓN
+
+- 2026-09-22 — Por autorización explícita del usuario, `database/reference/db.sql` inicializa MySQL en Docker. El modelo completo de referencia queda disponible, mientras las tablas Flyway de S2 se mantienen como compatibilidad transitoria para el backend de autenticación existente.
+
 No usar `database/reference/` como fuente de diseño antes de la comparación autorizada por el trainer.

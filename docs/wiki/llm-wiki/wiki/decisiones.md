@@ -31,3 +31,11 @@
 - Decisión: aprobar las HU-001 a HU-028 para su planificación e implementación.
 - Consecuencia: cada HU puede pasar a implementación cuando se seleccione para un incremento; la aprobación no altera su DoD ni equivale a implementación, validación o completitud.
 - Evidencia de aprobación: instrucción explícita del usuario: “Puedes aprobar todas las HU”.
+
+## DEC-005 — Esquema de referencia como inicialización de MySQL
+
+- Estado: aprobada.
+- Fecha: 2026-09-22.
+- Decisión: por autorización explícita del usuario, MySQL inicializa el esquema con `database/reference/db.sql`, montado de solo lectura en `docker-entrypoint-initdb.d`.
+- Consecuencia: las tablas de catálogo, disponibilidad, citas y datos sintéticos de la referencia quedan disponibles desde la creación del volumen. Flyway conserva temporalmente las tablas de identidad de S2 (`user_account`, `role_catalog`, `auth_session`) para no romper el contrato REST existente; su convergencia con `users`, `roles` y `refresh_tokens` se aborda en una HU posterior y no se declara completada aquí.
+- Evidencia de aprobación: confirmación explícita del usuario para usar `C:\Users\IA ACADEMY 3\Documents\hernando\citas\citas\database\reference\db.sql`.
