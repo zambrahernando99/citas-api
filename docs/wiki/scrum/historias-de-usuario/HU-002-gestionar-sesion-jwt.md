@@ -47,10 +47,12 @@ Login por email/contraseña; access y refresh separados, con refresh revocable.
 | CA-01 | Validado backend | `AuthFlowIntegrationTest#loginEmitsSeparateTokensAndRejectsInvalidCredentials` | Access/refresh separados y credenciales inválidas rechazadas |
 | CA-02 | Validado backend | `AuthFlowIntegrationTest#rotatesRefreshRejectsInvalidExpiredRevokedAndReusedTokensAndKeepsOtherSessionActive`, `JwtTokenAdapterTest` | Rotación, invalidez, reutilización y vencimiento |
 | CA-03 | Validado backend | `AuthFlowIntegrationTest#logoutRevokesOnlyPresentedSessionAndExpiredSessionIsRejected` | Logout revoca sólo la sesión presentada |
-| DoD | Validado backend | `mvn test`: 9 pruebas, 0 fallos | Validación cross-repo pendiente |
+| UI/cross-repo | Validado | `citas-web/src/services/authApi.ts`, `npm run lint`, `npm run build` y flujo REST controlado | Login, rotación y logout consumen el contrato v1; tokens sólo se mantienen en memoria |
+| DoD | Validado | `mvn test`: 9 pruebas, 0 fallos; MySQL/Flyway y flujo REST en ejecución | CORS, login, rotación y logout comprobados con datos sintéticos |
 ## Historial de validación
 - 2026-09-17 — Recreada con skill en `Pendiente de aprobación`.
 - 2026-09-17 — Aprobada para implementación por autorización explícita del usuario.
 - 2026-09-17 — Implementación backend validada mediante `mvn test`; validación del consumidor web pendiente.
+- 2026-09-22 — GOAL 01 verificado: CORS, login, rotación de refresh y logout `204` comprobados con MySQL/Flyway; typecheck y build del consumidor web en verde.
 ## Notas y decisiones
 - No se fijan duraciones/rotación de token sin decisión.

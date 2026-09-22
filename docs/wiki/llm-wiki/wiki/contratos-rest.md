@@ -84,6 +84,8 @@ Los detalles de refresh no distinguen causa para no revelar estado de sesión.
 - Son públicos sólo `POST /api/v1/auth/register`, `POST /api/v1/auth/login`, `POST /api/v1/auth/refresh`, `POST /api/v1/auth/logout` y el health de Actuator.
 - Todo endpoint futuro requiere autenticación por defecto hasta que una HU aprobada defina reglas más específicas.
 
-### Pendiente cross-repo
+### Validación cross-repo S2
 
-- `citas-web` debe verificar payloads, CORS y manejo de errores contra esta implementación. Pendiente: no verificado ni implementado en este cambio.
+- 2026-09-22 — `citas-web` implementó el cliente directo de registro, login y logout mediante `VITE_API_URL`; no existe BFF ni almacenamiento persistente de tokens.
+- 2026-09-22 — Con MySQL 8.4 y la API en ejecución se verificó el preflight CORS para `http://localhost:3000`, registro `201`, login con access/refresh, rotación de refresh y logout `204`, usando únicamente una cuenta sintética de prueba.
+- El frontend representa el `detail` de respuestas `application/problem+json`; los flujos de recuperación, ownership y las HU posteriores siguen fuera de alcance S2.

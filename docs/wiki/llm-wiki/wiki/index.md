@@ -2,7 +2,7 @@
 
 ## Estado
 
- Inicializada el 2026-09-17. El corte inicial integra especificaciones del laboratorio. Las HU-001 a HU-028 fueron aprobadas para su planificación e implementación el 2026-09-22; salvo la evidencia ya registrada para HU-001 y HU-002 en backend, las demás capacidades permanecen sin implementación ni validación.
+ Inicializada el 2026-09-17. El corte inicial integra especificaciones del laboratorio. Las HU-001 a HU-028 fueron aprobadas para su planificación e implementación el 2026-09-22. GOAL 01 (HU-001/HU-002) cuenta con evidencia backend, MySQL, REST y consumidor web; las demás capacidades permanecen sin implementación ni validación.
 
 ## Páginas
 
