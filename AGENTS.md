@@ -2,7 +2,7 @@
 
 ## Estado verificado del repositorio
 
-El bootstrap de Spring Boot para HU-001 y HU-002 existe desde 2026-09-17. `pom.xml` declara Java 21 y Spring Boot 3.5.0; hay código, migración Flyway, pruebas y `.env.example` sin secretos. Las HU-001 y HU-002 figuran como aprobadas; las demás HU no se implementan en este incremento.
+El bootstrap de Spring Boot para HU-001 y HU-002 existe desde 2026-09-17. `pom.xml` declara Java 21 y Spring Boot 3.5.0; hay código, migración Flyway, pruebas y `.env.example` sin secretos. Las HU-001 a HU-028 están aprobadas; este incremento sólo implementa y valida HU-001 y HU-002.
 
 - Paquete raíz decidido tras la inspección del repositorio: `co.academy.citas`.
 - Dominio: `domain`; casos de uso y puertos: `application`; REST/seguridad: `adapter.in`; JPA/JWT/hash: `adapter.out`.
