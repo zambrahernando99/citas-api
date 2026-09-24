@@ -1,5 +1,16 @@
 # Trazabilidad y calidad
 
+## EVIDENCIA — Oferta profesional S3 (2026-09-24)
+
+- HU cubiertas: HU-011, HU-012 y HU-013; dependencias declaradas HU-004, HU-007 y HU-010.
+- Backend: migración Flyway V2 con perfiles profesionales, catálogos de dos sedes fijas, especialidades activas y relaciones N:M normalizadas; autorización de las mutaciones por `ROLE_ADMIN`.
+- Seguridad: la contraseña temporal sólo se acepta en el request de creación, se transforma con BCrypt y no figura en respuestas ni logs de aplicación.
+- Frontend: las vistas de profesionales y especialidades consultan la API REST; ADMIN puede crear, asignar y activar/desactivar sin usar las listas simuladas de esas vistas.
+- Pruebas ejecutadas: `mvn test` con repositorio Maven temporal del workspace — 15 pruebas, 0 fallos. Incluye rol, unicidad, BCrypt, relaciones N:M, primaria, sedes, catálogo y estado activo.
+- Verificación frontend: `npm run lint` y `npm run build` — correctos. El build se ejecutó fuera del sandbox porque Vite requiere sus binarios nativos de Windows.
+- Verificación MySQL real (2026-09-24): Docker Desktop inició `mysql:8.4` con `database/reference/db.sql`; la API aplicó Flyway V2 en `citas_fcv_training` y `GET /actuator/health` respondió 200/UP. Se confirmó el flujo REST ADMIN `201`/`200`, duplicado `409`, USER sin permiso `403`, desactivación y persistencia de 2 especialidades, exactamente 1 primaria, 2 sedes y hash BCrypt. No quedaron filas Flyway fallidas.
+- Frontend real: Vite respondió 200 en `http://localhost:5173` y la API está disponible en `http://localhost:8080` durante esta sesión de validación.
+
 ## HECHOS
 
 - Se requiere al menos un commit trazable por sesión S2–S6 en cada repositorio, sin reescritura que oculte el progreso. Fuente: restricciones técnicas y evidencias.

@@ -6,6 +6,9 @@ import co.academy.citas.application.port.out.PasswordHashingPort;
 import co.academy.citas.application.port.out.TokenFingerprintPort;
 import co.academy.citas.application.port.out.UserAccountPort;
 import co.academy.citas.application.service.AuthenticationService;
+import co.academy.citas.application.service.AppointmentFlowService;
+import co.academy.citas.application.service.ProfessionalCatalogService;
+import co.academy.citas.application.service.ProfessionalOfferService;
 import co.academy.citas.application.service.RegistrationService;
 import java.time.Clock;
 import org.springframework.context.annotation.Bean;
@@ -26,8 +29,27 @@ public class ApplicationBeansConfiguration {
     }
 
     @Bean
+    AppointmentFlowService appointmentFlowService(co.academy.citas.application.port.out.AppointmentFlowPort appointmentFlowPort,
+                                                  Clock clock) {
+        return new AppointmentFlowService(appointmentFlowPort, clock);
+    }
+
+    @Bean
     RegistrationService registrationService(UserAccountPort userAccountPort, PasswordHashingPort passwordHashingPort) {
         return new RegistrationService(userAccountPort, passwordHashingPort);
+    }
+
+    @Bean
+    ProfessionalOfferService professionalOfferService(UserAccountPort userAccountPort,
+                                                      co.academy.citas.application.port.out.ProfessionalOfferPort professionalOfferPort,
+                                                      PasswordHashingPort passwordHashingPort) {
+        return new ProfessionalOfferService(userAccountPort, professionalOfferPort, passwordHashingPort);
+    }
+
+    @Bean
+    ProfessionalCatalogService professionalCatalogService(
+            co.academy.citas.application.port.out.ProfessionalOfferPort professionalOfferPort) {
+        return new ProfessionalCatalogService(professionalOfferPort);
     }
 
     @Bean

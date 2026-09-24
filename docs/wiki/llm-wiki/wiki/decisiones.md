@@ -39,3 +39,11 @@
 - Decisión: por autorización explícita del usuario, MySQL inicializa el esquema con `database/reference/db.sql`, montado de solo lectura en `docker-entrypoint-initdb.d`.
 - Consecuencia: las tablas de catálogo, disponibilidad, citas y datos sintéticos de la referencia quedan disponibles desde la creación del volumen. Flyway conserva temporalmente las tablas de identidad de S2 (`user_account`, `role_catalog`, `auth_session`) para no romper el contrato REST existente; su convergencia con `users`, `roles` y `refresh_tokens` se aborda en una HU posterior y no se declara completada aquí.
 - Evidencia de aprobación: confirmación explícita del usuario para usar `C:\Users\IA ACADEMY 3\Documents\hernando\citas\citas\database\reference\db.sql`.
+
+## DEC-006 — Desactivación operativa de profesional en S3
+
+- Estado: aprobada.
+- Fecha: 2026-09-24.
+- Decisión: la desactivación conserva el perfil y todas sus relaciones de especialidades y sedes. El profesional inactivo queda excluido de la consulta de profesionales habilitados para operaciones nuevas. S3 no crea, modifica ni cancela compromisos, bloques, reservas o agenda: esas capacidades pertenecen a S4.
+- Consecuencia: el estado se cambia mediante una actualización reversible; no existe borrado físico de profesional ni de sus asignaciones.
+- Evidencia de aprobación: precondición confirmada por el usuario al solicitar la implementación de S3.
