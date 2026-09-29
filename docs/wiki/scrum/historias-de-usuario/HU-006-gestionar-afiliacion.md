@@ -27,8 +27,8 @@ La afiliación referencia catálogos normalizados y pertenece al USER autenticad
 ## Esfuerzo
 **Nivel:** Medio. **Justificación de dificultad:** integra relaciones 3FN y validación cruzada.
 ## Tareas de desarrollo
-- [ ] **T-01 — Documentar relación EPS–plan.** Dificultad: Medio. Definir consulta de opciones activas.
-- [ ] **T-02 — Implementar afiliación.** Dificultad: Medio. Garantizar FK/ownership y pruebas.
+- [x] **T-01 — Documentar relación EPS–plan.** Dificultad: Medio. Definir consulta de opciones activas.
+- [x] **T-02 — Implementar afiliación.** Dificultad: Medio. Garantizar FK/ownership y pruebas.
 ## Criterios de aceptación
 ### CA-01 — Asociación válida
 **Dado** catálogos válidos **cuando** USER asocia afiliación **entonces** quedan referencias consistentes.
@@ -37,15 +37,17 @@ La afiliación referencia catálogos normalizados y pertenece al USER autenticad
 ### CA-03 — Aislamiento
 **Dado** afiliación ajena **cuando** USER la modifica **entonces** se rechaza.
 ## Definition of Done
-- [ ] CA-01 a CA-03 con evidencia.
-- [ ] Modelo 3FN/migración Flyway si aplica y pruebas de integridad disponibles.
-- [ ] Contrato/UI directos coherentes; trazabilidad actualizada.
+- [x] CA-01 a CA-03 con evidencia.
+- [x] Modelo 3FN/migración Flyway si aplica y pruebas de integridad disponibles.
+- [x] Contrato/UI directos coherentes; trazabilidad actualizada.
 ## Evidencia de validación
 | Elemento | Resultado | Evidencia | Observación |
 |---|---|---|---|
-| CA-01 a CA-03 | Pendiente | — | No implementada |
-| DoD | Pendiente | — | — |
+| CA-01 a CA-03 | Validado backend | `AccountAndCatalogIntegrationTest#adminManagesEpsAndPlansAndUserAffiliationOnlyAcceptsActiveConsistentData` | Solo EPS/plan activos y consistentes |
+| E2E | Validado | `docs/evidence/s3-s4/03-e2e-docker.md` | Afiliación |
+| DoD | Validado | `docs/evidence/s3-s4/01-red-green.md`, `02-hook.md`, `docs/evidence/s3-s4/03-e2e-docker.md` | Backend 40 pruebas, web 13 Vitest, E2E 47/47 |
 ## Historial de validación
 - 2026-09-17 — Recreada con skill en `Pendiente de aprobación`.
+- 2026-09-29 — Validada en S3/S4: evidencia en docs/evidence/s3-s4/ y docs/evidence/loops/.
 ## Notas y decisiones
 - No se guardan nombres redundantes.

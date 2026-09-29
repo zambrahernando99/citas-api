@@ -27,8 +27,8 @@ Inactivo no participa en nueva disponibilidad/reserva; impacto en compromisos pr
 ## Esfuerzo
 **Nivel:** Bajo. **Justificación de dificultad:** regla puntual con impacto en consultas.
 ## Tareas de desarrollo
-- [ ] **T-01 — Documentar semántica.** Dificultad: Bajo. Acordar efecto de citas vigentes.
-- [ ] **T-02 — Aplicar elegibilidad.** Dificultad: Medio. Excluirlo de nuevas operaciones.
+- [x] **T-01 — Documentar semántica.** Dificultad: Bajo. Acordar efecto de citas vigentes.
+- [x] **T-02 — Aplicar elegibilidad.** Dificultad: Medio. Excluirlo de nuevas operaciones.
 ## Criterios de aceptación
 ### CA-01 — Cambio autorizado
 **Dado** ADMIN **cuando** cambia estado **entonces** se conserva el perfil y relaciones.
@@ -37,15 +37,17 @@ Inactivo no participa en nueva disponibilidad/reserva; impacto en compromisos pr
 ### CA-03 — Protección
 **Dado** actor no ADMIN **cuando** cambia estado **entonces** se rechaza.
 ## Definition of Done
-- [ ] CA-01 a CA-03 con evidencia.
-- [ ] Contrato, pruebas de rol/exclusión y decisión sobre compromisos vigentes disponibles.
-- [ ] Trazabilidad Scrum actualizada.
+- [x] CA-01 a CA-03 con evidencia.
+- [x] Contrato, pruebas de rol/exclusión y decisión sobre compromisos vigentes disponibles.
+- [x] Trazabilidad Scrum actualizada.
 ## Evidencia de validación
 | Elemento | Resultado | Evidencia | Observación |
 |---|---|---|---|
-| CA-01 a CA-03 | Pendiente | — | No implementada |
-| DoD | Pendiente | — | — |
+| CA-01 a CA-03 | Validado backend | `ProfessionalOfferIntegrationTest` (6 pruebas) | Activación/inactivación ADMIN |
+| E2E | Validado | `docs/evidence/s3-s4/03-e2e-docker.md` | Profesional activo con oferta |
+| DoD | Validado | `docs/evidence/s3-s4/01-red-green.md`, `02-hook.md`, `docs/evidence/s3-s4/03-e2e-docker.md` | Backend 40 pruebas, web 13 Vitest, E2E 47/47 |
 ## Historial de validación
 - 2026-09-17 — Recreada con skill en `Pendiente de aprobación`.
+- 2026-09-29 — Validada en S3/S4: evidencia en docs/evidence/s3-s4/ y docs/evidence/loops/.
 ## Notas y decisiones
 - Efecto de citas existentes es incógnita.

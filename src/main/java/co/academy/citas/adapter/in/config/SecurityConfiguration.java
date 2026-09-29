@@ -40,6 +40,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, PUBLIC_AUTH_PATHS).permitAll()
                         .requestMatchers("/actuator/health").permitAll()
+                        // El despacho interno a /error (405/404 del contenedor) no debe convertirse en 401
+                        .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/professional/**").hasRole("PROFESSIONAL")
                         .anyRequest().authenticated())

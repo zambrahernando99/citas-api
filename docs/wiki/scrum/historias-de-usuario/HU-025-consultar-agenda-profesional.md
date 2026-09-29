@@ -27,8 +27,8 @@ Solo presenta citas propias y datos necesarios para atención.
 ## Esfuerzo
 **Nivel:** Medio. **Justificación de dificultad:** proyección segura por período/sede.
 ## Tareas de desarrollo
-- [ ] **T-01 — Definir proyección.** Dificultad: Medio. Acordar campos mínimos/filtros.
-- [ ] **T-02 — Implementar agenda.** Dificultad: Medio. Aplicar ownership y pruebas.
+- [x] **T-01 — Definir proyección.** Dificultad: Medio. Acordar campos mínimos/filtros.
+- [x] **T-02 — Implementar agenda.** Dificultad: Medio. Aplicar ownership y pruebas.
 ## Criterios de aceptación
 ### CA-01 — Agenda propia
 **Dado** PROFESSIONAL **cuando** consulta **entonces** ve únicamente sus citas `APPROVED`.
@@ -37,15 +37,17 @@ Solo presenta citas propias y datos necesarios para atención.
 ### CA-03 — Privacidad
 **Dado** cita de otro profesional **cuando** consulta **entonces** no se expone.
 ## Definition of Done
-- [ ] CA-01 a CA-03 con evidencia.
-- [ ] Contrato/UI y pruebas de filtros/ownership disponibles.
-- [ ] Trazabilidad Scrum actualizada.
+- [x] CA-01 a CA-03 con evidencia.
+- [x] Contrato/UI y pruebas de filtros/ownership disponibles.
+- [x] Trazabilidad Scrum actualizada.
 ## Evidencia de validación
 | Elemento | Resultado | Evidencia | Observación |
 |---|---|---|---|
-| CA-01 a CA-03 | Pendiente | — | No implementada |
-| DoD | Pendiente | — | — |
+| CA-01 a CA-03 | Validado backend | `AppointmentLifecycleIntegrationTest#professionalAgendaOnlyListsOwnApprovedAppointments` | Solo citas APPROVED propias |
+| UI | Validado | Mi agenda; `docs/evidence/s3-s4/03-e2e-docker.md` | — |
+| DoD | Validado | `docs/evidence/s3-s4/01-red-green.md`, `02-hook.md`, `docs/evidence/s3-s4/03-e2e-docker.md` | Backend 40 pruebas, web 13 Vitest, E2E 47/47 |
 ## Historial de validación
 - 2026-09-17 — Recreada con skill en `Pendiente de aprobación`.
+- 2026-09-29 — Validada en S3/S4: evidencia en docs/evidence/s3-s4/ y docs/evidence/loops/.
 ## Notas y decisiones
 - No implica gestión de bloques.

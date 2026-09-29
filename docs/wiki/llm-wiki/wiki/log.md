@@ -35,3 +35,11 @@
 - Decisiones registradas en DEC-007/008: no expirar retenciones; cierre sólo después de fin; token reset sólo en `dev`; regímenes configurables por ADMIN (excepción autorizada a HU-007); perfil editable limitado; cancelación bloqueada con reprogramación pendiente.
 - Evidencia técnica ejecutada: `mvn -o -Dmaven.compiler.useIncrementalCompilation=false -DskipTests compile` pasó con Java release 21; `npm run lint` y `npm run build` pasaron. No se ejecutaron pruebas, migraciones en MySQL ni flujos funcionales reales en esta sesión; no afirmar completitud del DoD hasta aportar esa evidencia.
 - S5 queda pendiente: no hay herramientas MCP de n8n ni instancia/credenciales conectadas. No se creó un JSON ficticio ni se activó una automatización.
+
+## 2026-09-29 — LEARN / S3/S4 cierre
+
+- Clasificación: HECHO, DECISIÓN y PREGUNTA ABIERTA.
+- HU-003..HU-028 validadas con evidencia (backend 40, web 13 Vitest, E2E 47/47, loops 1/1/1).
+- Contratos: historial de cita, bandeja admin, ids aditivos en `AppointmentResponse`, regímenes solo lectura, `not_found` 404 y `/error` permitido.
+- Decisiones DEC-009..012: regímenes fijos, hook PowerShell sobre staged, volumen `web_node_modules` + perfil `dev`, Vitest.
+- Riesgos: HMR en bind mount Windows, régimen SUB heredado, ADMIN por SQL, hook sobre árbol de trabajo.

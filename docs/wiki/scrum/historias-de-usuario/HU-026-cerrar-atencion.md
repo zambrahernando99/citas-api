@@ -27,8 +27,8 @@ Solo aplica a cita `APPROVED` pasada/aplicable, definición que requiere decisi�
 ## Esfuerzo
 **Nivel:** Medio. **Justificación de dificultad:** transición y elegibilidad temporal pendiente.
 ## Tareas de desarrollo
-- [ ] **T-01 — Decidir elegibilidad.** Dificultad: Medio. Precisar pasada/aplicable y corrección.
-- [ ] **T-02 — Implementar cierre.** Dificultad: Medio. Validar ownership y auditar.
+- [x] **T-01 — Decidir elegibilidad.** Dificultad: Medio. Precisar pasada/aplicable y corrección.
+- [x] **T-02 — Implementar cierre.** Dificultad: Medio. Validar ownership y auditar.
 ## Criterios de aceptación
 ### CA-01 — Cierre válido
 **Dado** cita propia aplicable `APPROVED` **cuando** marca resultado **entonces** queda `COMPLETED` o `NO_SHOW`.
@@ -37,15 +37,18 @@ Solo aplica a cita `APPROVED` pasada/aplicable, definición que requiere decisi�
 ### CA-03 — Auditoría
 **Dado** cierre válido **cuando** concluye **entonces** registra actor/fuente/fecha.
 ## Definition of Done
-- [ ] CA-01 a CA-03 con evidencia.
-- [ ] Decisión temporal, contrato/UI y pruebas de transición/ownership/auditoría disponibles.
-- [ ] Trazabilidad Scrum actualizada.
+- [x] CA-01 a CA-03 con evidencia.
+- [x] Decisión temporal, contrato/UI y pruebas de transición/ownership/auditoría disponibles.
+- [x] Trazabilidad Scrum actualizada.
 ## Evidencia de validación
 | Elemento | Resultado | Evidencia | Observación |
 |---|---|---|---|
-| CA-01 a CA-03 | Pendiente | — | No implementada |
-| DoD | Pendiente | — | Elegibilidad pendiente |
+| CA-01 a CA-03 | Validado backend | `AppointmentLifecycleIntegrationTest#onlyAssignedProfessionalClosesFinishedAppointmentAsCompletedOrNoShow` | COMPLETED/NO_SHOW solo profesional asignado |
+| UI | Validado | `ReconciliationScreens.test.tsx` | Deshabilitado en futuras; PATCH en pasadas |
+| E2E | Validado | `docs/evidence/s3-s4/03-e2e-docker.md` | NO_SHOW |
+| DoD | Validado | `docs/evidence/s3-s4/01-red-green.md`, `02-hook.md`, `docs/evidence/s3-s4/03-e2e-docker.md` | Backend 40 pruebas, web 13 Vitest, E2E 47/47 |
 ## Historial de validación
 - 2026-09-17 — Recreada con skill en `Pendiente de aprobación`.
+- 2026-09-29 — Validada en S3/S4: evidencia en docs/evidence/s3-s4/ y docs/evidence/loops/.
 ## Notas y decisiones
 - Requiere decisión de “pasada/aplicable”.

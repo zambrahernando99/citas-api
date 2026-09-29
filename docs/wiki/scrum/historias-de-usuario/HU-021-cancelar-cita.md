@@ -27,8 +27,8 @@ La transición es `CANCELLED`, no reactivable directamente.
 ## Esfuerzo
 **Nivel:** Medio. **Justificación de dificultad:** transición, liberación y terminalidad pendiente.
 ## Tareas de desarrollo
-- [ ] **T-01 — Definir elegibilidad.** Dificultad: Medio. Resolver estados terminales.
-- [ ] **T-02 — Implementar transición.** Dificultad: Medio. Liberar y auditar coherentemente.
+- [x] **T-01 — Definir elegibilidad.** Dificultad: Medio. Resolver estados terminales.
+- [x] **T-02 — Implementar transición.** Dificultad: Medio. Liberar y auditar coherentemente.
 ## Criterios de aceptación
 ### CA-01 — Cancelación válida
 **Dado** cita propia futura no terminal **cuando** USER cancela **entonces** queda `CANCELLED`.
@@ -37,15 +37,17 @@ La transición es `CANCELLED`, no reactivable directamente.
 ### CA-03 — Rechazo
 **Dado** cita ajena/pasada/terminal **cuando** cancela **entonces** no cambia.
 ## Definition of Done
-- [ ] CA-01 a CA-03 con evidencia.
-- [ ] Contrato/UI, pruebas de elegibilidad/liberación/auditoría y estados terminales definidos.
-- [ ] Trazabilidad Scrum actualizada.
+- [x] CA-01 a CA-03 con evidencia.
+- [x] Contrato/UI, pruebas de elegibilidad/liberación/auditoría y estados terminales definidos.
+- [x] Trazabilidad Scrum actualizada.
 ## Evidencia de validación
 | Elemento | Resultado | Evidencia | Observación |
 |---|---|---|---|
-| CA-01 a CA-03 | Pendiente | — | No implementada |
-| DoD | Pendiente | — | Estados pendientes |
+| CA-01 a CA-03 | Validado backend | `AppointmentLifecycleIntegrationTest#onlyOwnerCancelsFutureAppointmentAndSlotsAreReleasedWithAudit`, `#pastAppointmentCannotBeCancelled` | Libera slots y audita; pasadas rechazadas |
+| E2E | Validado | `docs/evidence/s3-s4/03-e2e-docker.md` | Cancelación |
+| DoD | Validado | `docs/evidence/s3-s4/01-red-green.md`, `02-hook.md`, `docs/evidence/s3-s4/03-e2e-docker.md` | Backend 40 pruebas, web 13 Vitest, E2E 47/47 |
 ## Historial de validación
 - 2026-09-17 — Recreada con skill en `Pendiente de aprobación`.
+- 2026-09-29 — Validada en S3/S4: evidencia en docs/evidence/s3-s4/ y docs/evidence/loops/.
 ## Notas y decisiones
 - Terminalidad requiere revisión.

@@ -27,8 +27,8 @@ Selecciona especialidad, sede, profesional y horario; nace `REQUESTED` y retiene
 ## Esfuerzo
 **Nivel:** Alto. **Justificación de dificultad:** reserva concurrente y retención transaccional.
 ## Tareas de desarrollo
-- [ ] **T-01 — Documentar solicitud/retención.** Dificultad: Alto. Definir conflicto y pendiente de expiración.
-- [ ] **T-02 — Implementar creación.** Dificultad: Alto. Revalidar slots y auditar estado.
+- [x] **T-01 — Documentar solicitud/retención.** Dificultad: Alto. Definir conflicto y pendiente de expiración.
+- [x] **T-02 — Implementar creación.** Dificultad: Alto. Revalidar slots y auditar estado.
 ## Criterios de aceptación
 ### CA-01 — Estado inicial
 **Dado** selección compatible disponible **cuando** USER solicita **entonces** nace en `REQUESTED`.
@@ -37,15 +37,18 @@ Selecciona especialidad, sede, profesional y horario; nace `REQUESTED` y retiene
 ### CA-03 — Conflicto
 **Dado** slots ocupados/retenidos **cuando** solicita **entonces** no se crea segunda reserva.
 ## Definition of Done
-- [ ] CA-01 a CA-03 con evidencia.
-- [ ] Contrato/UI, pruebas de conflicto/duración/auditoría y migración si aplica disponibles.
-- [ ] Expiración documentada como decisión pendiente; trazabilidad actualizada.
+- [x] CA-01 a CA-03 con evidencia.
+- [x] Contrato/UI, pruebas de conflicto/duración/auditoría y migración si aplica disponibles.
+- [x] Expiración documentada como decisión pendiente; trazabilidad actualizada.
 ## Evidencia de validación
 | Elemento | Resultado | Evidencia | Observación |
 |---|---|---|---|
-| CA-01 a CA-03 | Pendiente | — | No implementada |
-| DoD | Pendiente | — | — |
+| CA-01 a CA-03 | Validado backend | `AppointmentLifecycleIntegrationTest#sixtyMinuteSpecialtyNeedsTwoConsecutiveFreeSlots`, `#slotsHeldByRequestedSpecializedAppointmentCannotBeBooked`; `AppointmentFlowIntegrationTest#specializedRequestRetainsTwoSlotsAndRejectingItFreesThem` | REQUESTED retiene slots |
+| UI | Validado | `ReconciliationScreens.test.tsx` | Estado REQUESTED |
+| E2E | Validado | `docs/evidence/s3-s4/03-e2e-docker.md` | Solicitud especializada |
+| DoD | Validado | `docs/evidence/s3-s4/01-red-green.md`, `02-hook.md`, `docs/evidence/s3-s4/03-e2e-docker.md` | Backend 40 pruebas, web 13 Vitest, E2E 47/47 |
 ## Historial de validación
 - 2026-09-17 — Recreada con skill en `Pendiente de aprobación`.
+- 2026-09-29 — Validada en S3/S4: evidencia en docs/evidence/s3-s4/ y docs/evidence/loops/.
 ## Notas y decisiones
 - La decisión corresponde a [[HU-023-decidir-cita-especializada]].

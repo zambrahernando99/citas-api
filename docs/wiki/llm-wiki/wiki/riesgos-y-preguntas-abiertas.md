@@ -10,3 +10,7 @@
 - **PENDIENTE S5 — integración externa:** no hay cliente/servidor MCP de n8n disponible en las herramientas de esta sesión ni instancia/credenciales de n8n configuradas. No se puede invocar ni evidenciar un workflow funcional sin esa precondición del trainer.
 - **RIESGO:** elegir React/Angular antes de la aprobación visual Stitch/AI Studio contradice el flujo del curso.
 - **RIESGO:** convertir briefs n8n en contratos o activar flujos sin payload, autenticación y prueba controlada.
+- **HECHO/RIESGO — Vite HMR en Windows:** Vite no detecta cambios sobre el bind mount en Windows; hay que reiniciar el dev server para ver cambios.
+- **HECHO/RIESGO — régimen heredado:** la BD dev conserva un régimen `SUB`/subsidiado creado antes de V7; no afecta al seed fijo, pero puede aparecer en consultas locales.
+- **HECHO/RIESGO — alta de ADMIN:** no existe alta pública de ADMIN; en dev el rol se asigna por SQL.
+- **HECHO/RIESGO — hook:** el hook ejecuta las pruebas sobre el árbol de trabajo, no solo sobre lo staged; cambios no staged pueden influir en el resultado.

@@ -39,3 +39,11 @@
 - Tras la autorización explícita del usuario, el volumen MySQL se recreó con `database/reference/db.sql` montado de solo lectura en el inicializador oficial de MySQL.
 - Verificado en MySQL: 3 roles, 15 usuarios, 3 citas y 224 slots del esquema de referencia. Flyway registró baseline `0` y V1 correcta; el backend mantiene las tablas de autenticación S2 como compatibilidad transitoria.
 - Health API devolvió `200`; un registro/login sintético sobre esa misma base devolvió `201` y tokens separados; `mvn test` completó 9 pruebas sin fallos ni errores.
+
+## EVIDENCIA — Cierre S3/S4 (2026-09-29)
+
+- HU-003 a HU-028 validadas; evidencia en `docs/evidence/s3-s4/` (Red→Green, hook, E2E Docker) y `docs/evidence/loops/`.
+- Backend: 40 pruebas en verde (`AccountAndCatalogIntegrationTest`, `ProfessionalOfferIntegrationTest`, `AppointmentLifecycleIntegrationTest`, `AppointmentFlowIntegrationTest`, `ErrorDispatchIntegrationTest`, entre otras).
+- Web: 13 pruebas Vitest (`ReconciliationScreens.test.tsx`, `MyAppointmentsScreen.test.tsx`).
+- E2E Docker: 47/47 verificaciones.
+- Loops: LOOP_01, LOOP_02 y LOOP_03 cerraron en 1 iteración cada uno (LOOP_01 corrigió 500→409 en reprogramación).

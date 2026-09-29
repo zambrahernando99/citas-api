@@ -27,8 +27,8 @@ Se permiten múltiples bloques/día; se discretizan en slots de 30 minutos.
 ## Esfuerzo
 **Nivel:** Alto. **Justificación de dificultad:** reglas temporales, solapamiento y consistencia.
 ## Tareas de desarrollo
-- [ ] **T-01 — Diseñar bloque/slots.** Dificultad: Alto. Definir validación e índices.
-- [ ] **T-02 — Implementar creación.** Dificultad: Alto. Proteger solapamiento y ownership.
+- [x] **T-01 — Diseñar bloque/slots.** Dificultad: Alto. Definir validación e índices.
+- [x] **T-02 — Implementar creación.** Dificultad: Alto. Proteger solapamiento y ownership.
 ## Criterios de aceptación
 ### CA-01 — Bloque válido
 **Dado** profesional activo y sede asignada **cuando** crea bloque futuro **entonces** se publica en slots de 30 minutos.
@@ -37,15 +37,17 @@ Se permiten múltiples bloques/día; se discretizan en slots de 30 minutos.
 ### CA-03 — Sede/propiedad
 **Dado** sede no asignada o profesional ajeno **cuando** crea bloque **entonces** se rechaza.
 ## Definition of Done
-- [ ] CA-01 a CA-03 con evidencia.
-- [ ] Migración Flyway si aplica, contrato y pruebas de solapamiento/ownership disponibles.
-- [ ] Trazabilidad Scrum actualizada.
+- [x] CA-01 a CA-03 con evidencia.
+- [x] Migración Flyway si aplica, contrato y pruebas de solapamiento/ownership disponibles.
+- [x] Trazabilidad Scrum actualizada.
 ## Evidencia de validación
 | Elemento | Resultado | Evidencia | Observación |
 |---|---|---|---|
-| CA-01 a CA-03 | Pendiente | — | No implementada |
-| DoD | Pendiente | — | — |
+| CA-01 a CA-03 | Validado backend | `AppointmentLifecycleIntegrationTest#professionalCannotEditOrDeleteCommittedBlockOrOverlapBlocks`; `AppointmentFlowIntegrationTest#professionalCreatesBlocksAndGeneralAppointmentIsApprovedWithoutDoubleBooking` | Sin solapamiento; USER 403 |
+| E2E | Validado | `docs/evidence/s3-s4/03-e2e-docker.md` | Bloque y solapamiento |
+| DoD | Validado | `docs/evidence/s3-s4/01-red-green.md`, `02-hook.md`, `docs/evidence/s3-s4/03-e2e-docker.md` | Backend 40 pruebas, web 13 Vitest, E2E 47/47 |
 ## Historial de validación
 - 2026-09-17 — Recreada con skill en `Pendiente de aprobación`.
+- 2026-09-29 — Validada en S3/S4: evidencia en docs/evidence/s3-s4/ y docs/evidence/loops/.
 ## Notas y decisiones
 - Concurrencia se prueba al implementar.

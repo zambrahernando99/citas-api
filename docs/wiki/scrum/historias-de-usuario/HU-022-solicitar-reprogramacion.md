@@ -27,8 +27,8 @@ Conserva profesional/especialidad; nueva franja queda `PENDING` retenida.
 ## Esfuerzo
 **Nivel:** Alto. **Justificación de dificultad:** dos franjas y consistencia transaccional.
 ## Tareas de desarrollo
-- [ ] **T-01 — Documentar solicitud.** Dificultad: Alto. Definir conflicto/expiración pendiente.
-- [ ] **T-02 — Implementar retención.** Dificultad: Alto. Conservar cita original.
+- [x] **T-01 — Documentar solicitud.** Dificultad: Alto. Definir conflicto/expiración pendiente.
+- [x] **T-02 — Implementar retención.** Dificultad: Alto. Conservar cita original.
 ## Criterios de aceptación
 ### CA-01 — Elegibilidad
 **Dado** cita propia `APPROVED` futura **cuando** solicita **entonces** puede seleccionar nueva franja.
@@ -37,15 +37,18 @@ Conserva profesional/especialidad; nueva franja queda `PENDING` retenida.
 ### CA-03 — Inmutables
 **Dado** cambio de profesional/especialidad **cuando** solicita **entonces** se trata como nueva cita/rechaza la reprogramación.
 ## Definition of Done
-- [ ] CA-01 a CA-03 con evidencia.
-- [ ] Contrato/UI, pruebas de doble retención/original y decisión de expiración disponibles.
-- [ ] Trazabilidad Scrum actualizada.
+- [x] CA-01 a CA-03 con evidencia.
+- [x] Contrato/UI, pruebas de doble retención/original y decisión de expiración disponibles.
+- [x] Trazabilidad Scrum actualizada.
 ## Evidencia de validación
 | Elemento | Resultado | Evidencia | Observación |
 |---|---|---|---|
-| CA-01 a CA-03 | Pendiente | — | No implementada |
-| DoD | Pendiente | — | Expiración pendiente |
+| CA-01 a CA-03 | Validado backend | `AppointmentLifecycleIntegrationTest#rescheduleKeepsOriginalWhilePendingRejectReleasesNewAndApproveSwaps` | Original se conserva mientras está pendiente |
+| Loops | Validado | `docs/evidence/loops/LOOP_01-*.md`, `LOOP_02-*.md` | Defecto 500→409 corregido |
+| UI | Validado | `MyAppointmentsScreen.test.tsx`; `docs/evidence/s3-s4/03-e2e-docker.md` | Solicitud desde Mis citas |
+| DoD | Validado | `docs/evidence/s3-s4/01-red-green.md`, `02-hook.md`, `docs/evidence/s3-s4/03-e2e-docker.md` | Backend 40 pruebas, web 13 Vitest, E2E 47/47 |
 ## Historial de validación
 - 2026-09-17 — Recreada con skill en `Pendiente de aprobación`.
+- 2026-09-29 — Validada en S3/S4: evidencia en docs/evidence/s3-s4/ y docs/evidence/loops/.
 ## Notas y decisiones
 - Continúa en [[HU-024-decidir-reprogramacion]].

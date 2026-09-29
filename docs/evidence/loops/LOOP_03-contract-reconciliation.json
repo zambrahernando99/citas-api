@@ -1,0 +1,34 @@
+{
+  "loop": "LOOP_03_RETO_INDEPENDIENTE",
+  "goal": "Reconciliar el contrato frontend/backend tras los cambios S3/S4 hasta que lint, pruebas y build web y pruebas API queden en verde",
+  "hu": ["HU-004", "HU-007", "HU-023", "HU-025", "HU-026", "HU-027", "HU-028"],
+  "trigger": "tsc/vite build rotos (3 importaciones de mutaciones de regímenes retiradas por PRD RF-05) + UI sin consumir /admin/inbox, historial ni refresh de sesión",
+  "maxIterations": 3,
+  "observedState": "Salida de npm run lint / npm test / npm run build en citas-web-dev y mvn test en citas-api-dev; git diff de citas-web",
+  "stopCondition": "lint 0 errores, npm test 100%, build OK, mvn test 100% y Verifier PASS",
+  "escalation": "Cualquier cambio de contrato backend, dependencia nueva o cambio de vite.config.ts => humano",
+  "iterations": [
+    {
+      "iteration": 1,
+      "builder": "completed",
+      "builderScope": ["citas-web/src/**", "citas-web/AGENTS.md"],
+      "changes": [
+        "Regímenes de solo lectura en CatalogScreens (sin create/edit/activate)",
+        "AdminRequestsScreen consume /admin/inbox con filtros de servidor; endpoint de decisión por tipo; motivo obligatorio al rechazar; historial por ítem",
+        "Agenda profesional: COMPLETED/NO_SHOW solo si la cita terminó; historial; alertas",
+        "navigation.ts como fuente única de pantallas por rol (Sidebar + App); etiquetas de estado en español compartidas",
+        "Refresh proactivo de sesión con /auth/refresh; mensaje de expiración si falla",
+        "AGENTS.md web actualizado",
+        "9 pruebas Vitest nuevas (ReconciliationScreens.test.tsx)"
+      ],
+      "backendTests": "39/39 pass",
+      "frontendLint": "0 errores",
+      "frontendTests": "13/13 pass",
+      "frontendBuild": "pass",
+      "verifier": "PASS",
+      "verifierEvidence": "Endpoints cruzados con AppointmentFlowController/CatalogController; sin mocks en producción; sin referencias a mutaciones de regímenes; vite.config.ts intacto"
+    }
+  ],
+  "postLoop": "Orquestador elimina requestedAppointments/pendingReschedules sin uso (observación no bloqueante del Verifier)",
+  "result": "COMPLETED"
+}

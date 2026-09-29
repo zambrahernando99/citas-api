@@ -27,8 +27,8 @@ No altera bloques ajenos, pasados o con citas comprometidas.
 ## Esfuerzo
 **Nivel:** Medio. **Justificación de dificultad:** debe detectar compromisos y preservar consistencia.
 ## Tareas de desarrollo
-- [ ] **T-01 — Definir compromiso.** Dificultad: Medio. Consultar citas/reservas afectadas.
-- [ ] **T-02 — Implementar cambio seguro.** Dificultad: Medio. Revalidar reglas temporales.
+- [x] **T-01 — Definir compromiso.** Dificultad: Medio. Consultar citas/reservas afectadas.
+- [x] **T-02 — Implementar cambio seguro.** Dificultad: Medio. Revalidar reglas temporales.
 ## Criterios de aceptación
 ### CA-01 — Edición propia
 **Dado** bloque futuro propio no comprometido **cuando** lo edita/elimina **entonces** se actualiza disponibilidad.
@@ -37,15 +37,16 @@ No altera bloques ajenos, pasados o con citas comprometidas.
 ### CA-03 — Revalidación
 **Dado** edición que solapa o cambia a sede ajena **cuando** se guarda **entonces** se rechaza.
 ## Definition of Done
-- [ ] CA-01 a CA-03 con evidencia.
-- [ ] Contrato, pruebas de compromiso/reglas y actualización de disponibilidad disponibles.
-- [ ] Trazabilidad Scrum actualizada.
+- [x] CA-01 a CA-03 con evidencia.
+- [x] Contrato, pruebas de compromiso/reglas y actualización de disponibilidad disponibles.
+- [x] Trazabilidad Scrum actualizada.
 ## Evidencia de validación
 | Elemento | Resultado | Evidencia | Observación |
 |---|---|---|---|
-| CA-01 a CA-03 | Pendiente | — | No implementada |
-| DoD | Pendiente | — | — |
+| CA-01 a CA-03 | Validado backend | `AppointmentLifecycleIntegrationTest#professionalCannotEditOrDeleteCommittedBlockOrOverlapBlocks` | Bloque comprometido no editable ni eliminable |
+| DoD | Validado | `docs/evidence/s3-s4/01-red-green.md`, `02-hook.md`, `docs/evidence/s3-s4/03-e2e-docker.md` | Backend 40 pruebas, web 13 Vitest, E2E 47/47 |
 ## Historial de validación
 - 2026-09-17 — Recreada con skill en `Pendiente de aprobación`.
+- 2026-09-29 — Validada en S3/S4: evidencia en docs/evidence/s3-s4/ y docs/evidence/loops/.
 ## Notas y decisiones
 - "Comprometida" se valida contra reserva/cita aplicable.

@@ -63,3 +63,26 @@
 - Decisión: bloquear la cancelación de la cita original mientras su solicitud de reprogramación siga `PENDING`; primero debe resolver ADMIN.
 - Consecuencia: ni la franja original ni la nueva se liberan por inferencia; la UI indica que la cita está a la espera de decisión.
 - Evidencia de aprobación: respuesta explícita del usuario a la pregunta de aclaración del 2026-09-29.
+
+## DEC-009 — Regímenes fijos (2026-09-29)
+
+- Estado: aprobada por el usuario.
+- Decisión: el usuario eligió cumplir PRD RF-05; los regímenes son catálogo fijo de solo lectura. Sustituye la excepción de DEC-007 sobre regímenes configurables.
+- Consecuencias: migración `V7__seed_fixed_regimes.sql` idempotente; se retiró el CRUD admin de regímenes en API y UI ("Regímenes (catálogo fijo)").
+
+## DEC-010 — Hook de secretos en PowerShell nativo (2026-09-29)
+
+- Estado: aprobada.
+- Decisión: el hook pre-commit de detección de secretos se implementa en PowerShell nativo y analiza el contenido staged (no el archivo del árbol de trabajo).
+- Evidencia: `docs/evidence/s3-s4/02-hook.md`.
+
+## DEC-011 — Docker: volumen `web_node_modules` y perfil `dev` en API (2026-09-29)
+
+- Estado: aprobada.
+- Decisión: el contenedor web usa un volumen nombrado `web_node_modules` para aislar dependencias nativas del host Windows; el contenedor API arranca con el perfil Spring `dev`.
+- Evidencia: `docs/evidence/s3-s4/03-e2e-docker.md`.
+
+## DEC-012 — Vitest como runner de pruebas web (2026-09-29)
+
+- Estado: aprobada por el usuario.
+- Decisión: las pruebas de `citas-web` usan Vitest (`src/components/screens/*.test.tsx`).

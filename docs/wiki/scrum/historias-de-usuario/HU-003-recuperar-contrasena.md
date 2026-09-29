@@ -27,8 +27,8 @@ El envío real es opcional; el desarrollo requiere alternativa segura aprobada.
 ## Esfuerzo
 **Nivel:** Medio. **Justificación de dificultad:** token sensible y política segura de entrega.
 ## Tareas de desarrollo
-- [ ] **T-01 — Definir mecanismo seguro de desarrollo.** Dificultad: Medio. Resolver la incógnita de entrega.
-- [ ] **T-02 — Implementar token de un uso.** Dificultad: Medio. Persistir consumo/expiración y validar.
+- [x] **T-01 — Definir mecanismo seguro de desarrollo.** Dificultad: Medio. Resolver la incógnita de entrega.
+- [x] **T-02 — Implementar token de un uso.** Dificultad: Medio. Persistir consumo/expiración y validar.
 ## Criterios de aceptación
 ### CA-01 — Solicitud
 **Dado** una cuenta registrada **cuando** solicita recuperación **entonces** se crea un token temporal de un solo uso.
@@ -37,16 +37,18 @@ El envío real es opcional; el desarrollo requiere alternativa segura aprobada.
 ### CA-03 — Rechazo seguro
 **Dado** token inválido, vencido o usado **cuando** cambia contraseña **entonces** no se modifica.
 ## Definition of Done
-- [ ] CA-01 a CA-03 validados con evidencia.
-- [ ] Contrato no expone password/token fuera del mecanismo aprobado.
-- [ ] Pruebas de un uso, invalidez y expiración disponibles; migración Flyway si aplica.
-- [ ] Trazabilidad Scrum actualizada.
+- [x] CA-01 a CA-03 validados con evidencia.
+- [x] Contrato no expone password/token fuera del mecanismo aprobado.
+- [x] Pruebas de un uso, invalidez y expiración disponibles; migración Flyway si aplica.
+- [x] Trazabilidad Scrum actualizada.
 ## Evidencia de validación
 | Elemento | Resultado | Evidencia | Observación |
 |---|---|---|---|
-| CA-01 a CA-03 | Pendiente | — | Entrega segura pendiente |
-| DoD | Pendiente | — | — |
+| CA-01 a CA-03 | Validado backend | `AccountAndCatalogIntegrationTest#passwordResetTokenIsSingleUseHashedAndReplacesPassword`, `#expiredPasswordResetTokenIsRejected` | Token SHA-256, TTL 900 s, un solo uso; sesiones revocadas |
+| E2E | Validado | `docs/evidence/s3-s4/03-e2e-docker.md` (filas HU-003) | Token dev de un solo uso en perfil dev sin SMTP; contraseña anterior inválida |
+| DoD | Validado | `docs/evidence/s3-s4/01-red-green.md`, `02-hook.md`, `docs/evidence/s3-s4/03-e2e-docker.md` | Backend 40 pruebas, web 13 Vitest, E2E 47/47 |
 ## Historial de validación
 - 2026-09-17 — Recreada con skill en `Pendiente de aprobación`.
+- 2026-09-29 — Validada en S3/S4: evidencia en docs/evidence/s3-s4/ y docs/evidence/loops/.
 ## Notas y decisiones
-- Bloqueada para desarrollo hasta decidir mecanismo de entrega seguro.
+- Mecanismo de desarrollo: token dev de un solo uso en perfil dev sin SMTP.

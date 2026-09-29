@@ -2,12 +2,12 @@
 
 ## Estado verificado del repositorio
 
-El bootstrap de Spring Boot para HU-001 y HU-002 existe desde 2026-09-17. `pom.xml` declara Java 21 y Spring Boot 3.5.0; hay código, migración Flyway, pruebas y `.env.example` sin secretos. Las HU-001 a HU-028 están aprobadas; este incremento sólo implementa y valida HU-001 y HU-002.
+`pom.xml` declara Java 21 y Spring Boot 3.5.0. Las HU-001 a HU-028 están aprobadas, implementadas y validadas al cierre de S3/S4 (2026-09-29); la evidencia está en `docs/evidence/s3-s4/` y `docs/evidence/loops/`.
 
-- Paquete raíz decidido tras la inspección del repositorio: `co.academy.citas`.
-- Dominio: `domain`; casos de uso y puertos: `application`; REST/seguridad: `adapter.in`; JPA/JWT/hash: `adapter.out`.
-- La migración `V1__create_identity_and_sessions.sql` crea roles, usuarios, relación N:M de roles y sesiones de refresh normalizadas.
-- Verificación ejecutada: `mvn test` (Maven 3.9.9 en un directorio temporal ignorado porque el host no tenía Maven en `PATH`), con 9 pruebas en verde. El compilador se ejecutó con `--release 21`.
+- Paquete raíz: `co.academy.citas`. Dominio: `domain`; casos de uso y puertos: `application`; REST/seguridad: `adapter.in`; JPA/JDBC/JWT/hash: `adapter.out`.
+- Migraciones Flyway V1..V7 (V7 siembra los regímenes fijos; no tienen CRUD, según PRD RF-05).
+- Verificación: `docker compose exec citas-api-dev mvn test` (40 pruebas, H2 en modo MySQL; `ErrorDispatchIntegrationTest` levanta un servidor real). El hook `.githooks/pre-commit` → `scripts/verify-s3.ps1` escanea secretos en lo staged y ejecuta `mvn test` con el Maven local `.tools`.
+- El contenedor de desarrollo arranca con perfil `dev` (`SPRING_PROFILES_ACTIVE`), lo que expone `debugToken` de recuperación sin SMTP (RF-03). Fuera de `dev`, el token nunca se expone.
 
 ## Responsabilidad
 

@@ -27,8 +27,8 @@ Especialidades configurables activas, con duración exclusiva 30/60; profesional
 ## Esfuerzo
 **Nivel:** Medio. **Justificación de dificultad:** regla de duración impacta disponibilidad y reserva.
 ## Tareas de desarrollo
-- [ ] **T-01 — Definir catálogo/duración.** Dificultad: Medio. Restringir 30/60 y actividad.
-- [ ] **T-02 — Propagar consulta.** Dificultad: Medio. Exponer para agenda sin duplicar valor.
+- [x] **T-01 — Definir catálogo/duración.** Dificultad: Medio. Restringir 30/60 y actividad.
+- [x] **T-02 — Propagar consulta.** Dificultad: Medio. Exponer para agenda sin duplicar valor.
 ## Criterios de aceptación
 ### CA-01 — Duración válida
 **Dado** ADMIN **cuando** guarda especialidad **entonces** solo acepta 30 o 60 minutos.
@@ -37,16 +37,18 @@ Especialidades configurables activas, con duración exclusiva 30/60; profesional
 ### CA-03 — No sobrescritura
 **Dado** profesional o reserva **cuando** usa especialidad **entonces** aplica su duración configurada.
 ## Definition of Done
-- [ ] CA-01 a CA-03 con evidencia.
-- [ ] Contrato, migración si aplica y pruebas de duración/rol/referencia disponibles.
-- [ ] Medicina General decidida o marcada bloqueante para HU-018.
-- [ ] Trazabilidad Scrum actualizada.
+- [x] CA-01 a CA-03 con evidencia.
+- [x] Contrato, migración si aplica y pruebas de duración/rol/referencia disponibles.
+- [x] Medicina General decidida o marcada bloqueante para HU-018.
+- [x] Trazabilidad Scrum actualizada.
 ## Evidencia de validación
 | Elemento | Resultado | Evidencia | Observación |
 |---|---|---|---|
-| CA-01 a CA-03 | Pendiente | — | No implementada |
-| DoD | Pendiente | — | — |
+| CA-01 a CA-03 | Validado backend | `AccountAndCatalogIntegrationTest#adminManagesSpecialtiesWithDurationRuleAndLogicalDeactivation` | Duración 30/60, inactivación lógica, solo ADMIN |
+| E2E | Validado | `docs/evidence/s3-s4/03-e2e-docker.md` | Especialidades |
+| DoD | Validado | `docs/evidence/s3-s4/01-red-green.md`, `02-hook.md`, `docs/evidence/s3-s4/03-e2e-docker.md` | Backend 40 pruebas, web 13 Vitest, E2E 47/47 |
 ## Historial de validación
 - 2026-09-17 — Recreada con skill en `Pendiente de aprobación`.
+- 2026-09-29 — Validada en S3/S4: evidencia en docs/evidence/s3-s4/ y docs/evidence/loops/.
 ## Notas y decisiones
 - Medicina General requiere revisión explícita.

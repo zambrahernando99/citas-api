@@ -27,8 +27,8 @@ Filtros: sede, tipo, especialidad, profesional y fecha; la consulta no sustituye
 ## Esfuerzo
 **Nivel:** Alto. **Justificación de dificultad:** integra tiempo, asignaciones, actividad, duración y reservas.
 ## Tareas de desarrollo
-- [ ] **T-01 — Definir consulta/índices.** Dificultad: Alto. Documentar filtros y consecutividad.
-- [ ] **T-02 — Implementar búsqueda/UI.** Dificultad: Alto. Probar conflictos y resultados vacíos.
+- [x] **T-01 — Definir consulta/índices.** Dificultad: Alto. Documentar filtros y consecutividad.
+- [x] **T-02 — Implementar búsqueda/UI.** Dificultad: Alto. Probar conflictos y resultados vacíos.
 ## Criterios de aceptación
 ### CA-01 — Filtros
 **Dado** filtros del PRD **cuando** USER busca **entonces** recibe franjas compatibles.
@@ -37,15 +37,17 @@ Filtros: sede, tipo, especialidad, profesional y fecha; la consulta no sustituye
 ### CA-03 — Duración
 **Dado** especialidad 60 **cuando** busca **entonces** solo aparecen dos slots consecutivos disponibles.
 ## Definition of Done
-- [ ] CA-01 a CA-03 con evidencia.
-- [ ] Contrato REST/UI, pruebas de filtros/30-60/conflictos y consistencia de datos disponibles.
-- [ ] Trazabilidad Scrum actualizada.
+- [x] CA-01 a CA-03 con evidencia.
+- [x] Contrato REST/UI, pruebas de filtros/30-60/conflictos y consistencia de datos disponibles.
+- [x] Trazabilidad Scrum actualizada.
 ## Evidencia de validación
 | Elemento | Resultado | Evidencia | Observación |
 |---|---|---|---|
-| CA-01 a CA-03 | Pendiente | — | No implementada |
-| DoD | Pendiente | — | — |
+| CA-01 a CA-03 | Validado backend | `AppointmentLifecycleIntegrationTest#sixtyMinuteSpecialtyNeedsTwoConsecutiveFreeSlots` | 60 min exige dos slots consecutivos |
+| E2E | Validado | `docs/evidence/s3-s4/03-e2e-docker.md` | Slots 30 min = 4, 60 min = 3 |
+| DoD | Validado | `docs/evidence/s3-s4/01-red-green.md`, `02-hook.md`, `docs/evidence/s3-s4/03-e2e-docker.md` | Backend 40 pruebas, web 13 Vitest, E2E 47/47 |
 ## Historial de validación
 - 2026-09-17 — Recreada con skill en `Pendiente de aprobación`.
+- 2026-09-29 — Validada en S3/S4: evidencia en docs/evidence/s3-s4/ y docs/evidence/loops/.
 ## Notas y decisiones
 - Revalidación pertenece a la creación de reserva.

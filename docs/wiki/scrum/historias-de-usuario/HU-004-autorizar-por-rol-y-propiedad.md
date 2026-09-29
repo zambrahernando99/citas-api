@@ -27,8 +27,8 @@ USER opera sus recursos; PROFESSIONAL los propios; ADMIN catálogos, profesional
 ## Esfuerzo
 **Nivel:** Alto. **Justificación de dificultad:** condición transversal a todas las APIs y vistas.
 ## Tareas de desarrollo
-- [ ] **T-01 — Documentar matriz de permisos.** Dificultad: Medio. Mapear roles contra HUs aprobadas.
-- [ ] **T-02 — Aplicar autorización.** Dificultad: Alto. Validar rol/ownership y respuestas negativas.
+- [x] **T-01 — Documentar matriz de permisos.** Dificultad: Medio. Mapear roles contra HUs aprobadas.
+- [x] **T-02 — Aplicar autorización.** Dificultad: Alto. Validar rol/ownership y respuestas negativas.
 ## Criterios de aceptación
 ### CA-01 — USER aislado
 **Dado** un USER autenticado **cuando** accede a recurso ajeno **entonces** se rechaza sin exponerlo.
@@ -37,16 +37,19 @@ USER opera sus recursos; PROFESSIONAL los propios; ADMIN catálogos, profesional
 ### CA-03 — Acceso propio
 **Dado** actor con rol y propiedad válidos **cuando** ejecuta acción permitida **entonces** puede continuar.
 ## Definition of Done
-- [ ] CA-01 a CA-03 validados con evidencia.
-- [ ] Matriz enlazada desde contratos afectados y pruebas negativas disponibles.
-- [ ] Política de roles combinados decidida o impacto bloqueado explícitamente.
-- [ ] Trazabilidad Scrum actualizada.
+- [x] CA-01 a CA-03 validados con evidencia.
+- [x] Matriz enlazada desde contratos afectados y pruebas negativas disponibles.
+- [x] Política de roles combinados decidida o impacto bloqueado explícitamente.
+- [x] Trazabilidad Scrum actualizada.
 ## Evidencia de validación
 | Elemento | Resultado | Evidencia | Observación |
 |---|---|---|---|
-| CA-01 a CA-03 | Pendiente | — | HU no implementada |
-| DoD | Pendiente | — | Roles combinados pendientes |
+| CA-01 a CA-03 | Validado backend | `AppointmentLifecycleIntegrationTest#rolesAreEnforcedOnProtectedRoutes`, `#onlyOwnerCancelsFutureAppointmentAndSlotsAreReleasedWithAudit`, `#statusHistoryRecordsEveryTransitionAndIsReadableOnlyByAuthorizedActors`; `ProfessionalOfferIntegrationTest`; `ErrorDispatchIntegrationTest` | Mutaciones no ADMIN rechazadas; 401 solo sin token; `/error` permitido |
+| UI | Validado | `ReconciliationScreens.test.tsx` | Menú por rol desde `src/navigation.ts` |
+| E2E | Validado | `docs/evidence/s3-s4/03-e2e-docker.md` | 403/401 observados |
+| DoD | Validado | `docs/evidence/s3-s4/01-red-green.md`, `02-hook.md`, `docs/evidence/s3-s4/03-e2e-docker.md` | Backend 40 pruebas, web 13 Vitest, E2E 47/47 |
 ## Historial de validación
 - 2026-09-17 — Recreada con skill en `Pendiente de aprobación`.
+- 2026-09-29 — Validada en S3/S4: evidencia en docs/evidence/s3-s4/ y docs/evidence/loops/.
 ## Notas y decisiones
 - Requisito transversal para HUs protegidas.

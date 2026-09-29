@@ -27,8 +27,8 @@ Permite varias especialidades y una primaria; relaciones N:M normalizadas.
 ## Esfuerzo
 **Nivel:** Medio. **Justificación de dificultad:** N:M, primaria e impacto en elegibilidad.
 ## Tareas de desarrollo
-- [ ] **T-01 — Modelar relaciones.** Dificultad: Medio. Definir primaria y restricciones.
-- [ ] **T-02 — Exponer administración.** Dificultad: Medio. Validar activos y pruebas.
+- [x] **T-01 — Modelar relaciones.** Dificultad: Medio. Definir primaria y restricciones.
+- [x] **T-02 — Exponer administración.** Dificultad: Medio. Validar activos y pruebas.
 ## Criterios de aceptación
 ### CA-01 — Especialidades
 **Dado** ADMIN **cuando** asigna especialidades activas **entonces** puede marcar una primaria.
@@ -37,15 +37,17 @@ Permite varias especialidades y una primaria; relaciones N:M normalizadas.
 ### CA-03 — Elegibilidad
 **Dado** combinación no asignada **cuando** se publica o reserva **entonces** se rechaza/excluye.
 ## Definition of Done
-- [ ] CA-01 a CA-03 con evidencia.
-- [ ] Migración si aplica, contrato y pruebas N:M/primaria/actividad disponibles.
-- [ ] Trazabilidad Scrum actualizada.
+- [x] CA-01 a CA-03 con evidencia.
+- [x] Migración si aplica, contrato y pruebas N:M/primaria/actividad disponibles.
+- [x] Trazabilidad Scrum actualizada.
 ## Evidencia de validación
 | Elemento | Resultado | Evidencia | Observación |
 |---|---|---|---|
-| CA-01 a CA-03 | Pendiente | — | No implementada |
-| DoD | Pendiente | — | — |
+| CA-01 a CA-03 | Validado backend | `ProfessionalOfferIntegrationTest` (6 pruebas) | Asignaciones normalizadas |
+| E2E | Validado | `docs/evidence/s3-s4/03-e2e-docker.md` | Asignación de especialidades y sedes |
+| DoD | Validado | `docs/evidence/s3-s4/01-red-green.md`, `02-hook.md`, `docs/evidence/s3-s4/03-e2e-docker.md` | Backend 40 pruebas, web 13 Vitest, E2E 47/47 |
 ## Historial de validación
 - 2026-09-17 — Recreada con skill en `Pendiente de aprobación`.
+- 2026-09-29 — Validada en S3/S4: evidencia en docs/evidence/s3-s4/ y docs/evidence/loops/.
 ## Notas y decisiones
 - No se guardan listas en columnas.

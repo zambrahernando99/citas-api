@@ -187,8 +187,8 @@ S3 no expone ni implementa bloques de disponibilidad, reservas, slots ni agenda 
 
 - `GET /api/v1/auth/me` y `PUT /api/v1/auth/me` leen/actualizan exclusivamente la cuenta del principal. El body permite `givenNames`, `familyNames`, `email` y `phone`; rol, documento y propiedad de otros usuarios no son editables. La respuesta de perfil no incluye documento ni hash.
 - `GET /api/v1/eps`, `GET /api/v1/eps/{epsId}/plans` y `GET /api/v1/regimes` retornan catálogos activos. `GET/PUT /api/v1/profile/affiliation` administra la afiliación propia, validando relación plan-EPS y régimen activo.
-- ADMIN administra EPS (`/admin/eps`), planes (`/admin/eps/{epsId}/plans`, `/admin/plans/{id}`), especialidades (`/admin/specialties`) y regímenes (`/admin/regimes`). Las eliminaciones son lógicas; se conserva integridad referencial.
-- **DECISIÓN aprobada por el usuario el 2026-09-24:** los regímenes serán configurables por ADMIN. Esta decisión autoriza expresamente una excepción al texto original de HU-007, que los describía como fijos/de solo lectura. HIC/ICV y roles/estados siguen siendo catálogos fijos/de solo lectura.
+- ADMIN administra EPS (`/admin/eps`), planes (`/admin/eps/{epsId}/plans`, `/admin/plans/{id}`), especialidades (`/admin/specialties`). Los regímenes son de solo lectura (`GET /api/v1/regimes` y `GET /api/v1/admin/regimes`); desde 2026-09-29 no hay mutaciones de regímenes. Las eliminaciones son lógicas; se conserva integridad referencial.
+- **SUPERADA el 2026-09-29 (ver decisiones):** los regímenes serán configurables por ADMIN. Esta decisión autoriza expresamente una excepción al texto original de HU-007, que los describía como fijos/de solo lectura. HIC/ICV y roles/estados siguen siendo catálogos fijos/de solo lectura.
 - **DECISIÓN aprobada por el usuario el 2026-09-24:** los únicos campos de perfil editables en HU-005 son nombres, apellidos, email y teléfono. La unicidad del email se conserva.
 
 ## DECISIÓN — Recuperación de contraseña
@@ -204,3 +204,13 @@ S3 no expone ni implementa bloques de disponibilidad, reservas, slots ni agenda 
 - Una cancelación de cita con reprogramación `PENDING` asociada se rechaza hasta que ADMIN decida dicha solicitud; no se libera anticipadamente la franja propuesta.
 - **DECISIÓN aprobada por el usuario el 2026-09-24:** las retenciones de solicitudes no expiran automáticamente. La retención de una cita `REQUESTED` termina por decisión ADMIN; la de la propuesta de reprogramación termina por decisión ADMIN.
 - **DECISIÓN aprobada por el usuario el 2026-09-29:** si una cita tiene reprogramación `PENDING`, se bloquea su cancelación hasta la decisión ADMIN; la retención de la franja nueva no se libera por cancelación implícita.
+
+## DECISIÓN — Ajustes de contrato S3/S4 (2026-09-29)
+
+- Estado: implementado y validado (backend 40 pruebas, web 13 Vitest, E2E 47/47).
+- `GET /api/v1/appointments/{id}/history`: lista de `HistoryResponse {status, source, changedAt, reason}` en orden cronológico; no expone el actor. Lo leen el dueño, el profesional asignado o ADMIN; cualquier otro recibe `404`. `PUT`/`DELETE` responden `405`; no hay mutación del historial.
+- `GET /api/v1/admin/inbox?type&locationId&professionalId&specialtyId&from&to` (ADMIN): combina citas `REQUESTED` y reprogramaciones `PENDING`, sin efectos secundarios. `type` admite `APPOINTMENT` o `RESCHEDULE`. `InboxItemResponse`: `type`, `id`, `appointmentId`, `status`, `specialty`, `professionalName`, `location`, `patientName`, `startsAt`, `endsAt`, `previousStartsAt`, `reason`, `professionalId`, `specialtyId`, `locationId`.
+- `AppointmentResponse` añade `professionalId`, `specialtyId` y `locationId` (cambio aditivo, compatible).
+- Regímenes: solo `GET /api/v1/regimes` y `GET /api/v1/admin/regimes`; el CRUD admin fue retirado (PRD RF-05).
+- Errores: `NoSuchElementException` → `404` con `code` `not_found`; `IllegalArgumentException` conserva `code` `invalid_professional_offer` pero `detail` usa el mensaje real de validación.
+- `/error` está permitido en seguridad para conservar `404`/`405` reales; el `401` queda solo para peticiones sin token.

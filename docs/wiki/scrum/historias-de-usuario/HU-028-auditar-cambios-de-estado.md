@@ -27,8 +27,8 @@ Registra cita, estado nuevo, actor cuando existe, fuente SYSTEM/USER/ADMIN, fech
 ## Esfuerzo
 **Nivel:** Alto. **Justificación de dificultad:** es transversal y debe preservar inmutabilidad/privacidad.
 ## Tareas de desarrollo
-- [ ] **T-01 — Modelar historial.** Dificultad: Alto. Mantener 3FN e inmutabilidad; Flyway si aplica.
-- [ ] **T-02 — Integrar transiciones.** Dificultad: Alto. Conectar casos de uso y pruebas de trazabilidad.
+- [x] **T-01 — Modelar historial.** Dificultad: Alto. Mantener 3FN e inmutabilidad; Flyway si aplica.
+- [x] **T-02 — Integrar transiciones.** Dificultad: Alto. Conectar casos de uso y pruebas de trazabilidad.
 ## Criterios de aceptación
 ### CA-01 — Datos de auditoría
 **Dado** cambio de estado **cuando** ocurre **entonces** guarda cita, estado, actor/fuente, fecha/hora y motivo opcional.
@@ -37,15 +37,18 @@ Registra cita, estado nuevo, actor cuando existe, fuente SYSTEM/USER/ADMIN, fech
 ### CA-03 — Privacidad
 **Dado** lectura autorizada de cita **cuando** muestra motivo/historial aplicable **entonces** no expone secretos ni recurso ajeno.
 ## Definition of Done
-- [ ] CA-01 a CA-03 con evidencia.
-- [ ] Migración si aplica, pruebas de inmutabilidad/actor/fuente/motivo y contratos protegidos disponibles.
-- [ ] Todas las HUs relacionadas invocan auditoría al cambiar estado; trazabilidad actualizada.
+- [x] CA-01 a CA-03 con evidencia.
+- [x] Migración si aplica, pruebas de inmutabilidad/actor/fuente/motivo y contratos protegidos disponibles.
+- [x] Todas las HUs relacionadas invocan auditoría al cambiar estado; trazabilidad actualizada.
 ## Evidencia de validación
 | Elemento | Resultado | Evidencia | Observación |
 |---|---|---|---|
-| CA-01 a CA-03 | Pendiente | — | No implementada |
-| DoD | Pendiente | — | — |
+| CA-01 a CA-03 | Validado backend | `AppointmentLifecycleIntegrationTest#statusHistoryRecordsEveryTransitionAndIsReadableOnlyByAuthorizedActors` y auditoría de reprogramación aprobada | `GET /api/v1/appointments/{id}/history` sin actor; PUT/DELETE 405 |
+| Inmutabilidad | Validado | Revisión de código | Sin endpoint ni código de update/delete sobre `appointment_status_history` |
+| UI | Validado | Historial web; `docs/evidence/s3-s4/03-e2e-docker.md` | — |
+| DoD | Validado | `docs/evidence/s3-s4/01-red-green.md`, `02-hook.md`, `docs/evidence/s3-s4/03-e2e-docker.md` | Backend 40 pruebas, web 13 Vitest, E2E 47/47 |
 ## Historial de validación
 - 2026-09-17 — Recreada con skill en `Pendiente de aprobación`.
+- 2026-09-29 — Validada en S3/S4: evidencia en docs/evidence/s3-s4/ y docs/evidence/loops/.
 ## Notas y decisiones
 - Base para transiciones; no equivale a CRUD de auditoría.

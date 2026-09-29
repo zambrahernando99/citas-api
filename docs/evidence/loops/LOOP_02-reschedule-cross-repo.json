@@ -1,0 +1,32 @@
+{
+  "loop": "LOOP_02_GUIADO_AVANZADO",
+  "goal": "Reprogramación completa: original vigente mientras PENDING, nueva franja retenida, decisión solo ADMIN, frontend refleja estado, motivo e historial",
+  "hu": ["HU-020", "HU-022", "HU-024", "HU-028"],
+  "maxIterations": 4,
+  "stopCondition": "Verifier PASS con evidencia de todos los criterios (pruebas backend, pruebas/typecheck web, contrato REST)",
+  "escalation": "Cambio de dependencia o migración no prevista, o cambio de contrato backend => humano",
+  "preconditions": [
+    "Backend listo en commit 1744813 (LOOP_01 + historial + IDs de referencia)",
+    "Orquestador: http.ts compartido, servicios migrados, Vitest configurado (dependencia aprobada por el usuario)"
+  ],
+  "iterations": [
+    {
+      "iteration": 1,
+      "builder": "completed",
+      "builderScope": ["citas-web/src/components/screens/LiveScreens.tsx", "citas-web/src/types.ts", "citas-web/src/components/screens/MyAppointmentsScreen.test.tsx"],
+      "changes": [
+        "Reprogramación con professionalId/specialtyId/locationId reales (se elimina la búsqueda por nombre)",
+        "Badge 'Reprogramación pendiente', acciones deshabilitadas, motivo de decisión, errores en role=alert, busy flag",
+        "Panel 'Historial' con estados de carga/vacío/error y etiquetas en español",
+        "Limpieza de tipos del prototipo en types.ts",
+        "4 pruebas Vitest (IDs + POST, pendiente, 409, historial)"
+      ],
+      "backendTests": "AppointmentLifecycleIntegrationTest 14/14 pass",
+      "frontendTests": "4/4 pass",
+      "frontendBuild": "typecheck/build: solo 3 errores conocidos fuera de alcance (CatalogScreens regímenes, LOOP_03)",
+      "verifier": "PASS",
+      "verifierEvidence": "Contrato alineado con AppointmentFlowController; sin mocks en producción; vite.config.ts intacto; accesibilidad básica (dialog, labels, alert, aria-pressed)"
+    }
+  ],
+  "result": "COMPLETED"
+}

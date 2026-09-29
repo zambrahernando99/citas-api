@@ -27,8 +27,8 @@ Lectura propia por fecha/rango con sede y franja.
 ## Esfuerzo
 **Nivel:** Bajo. **Justificación de dificultad:** lectura filtrada de datos propios.
 ## Tareas de desarrollo
-- [ ] **T-01 — Documentar filtros.** Dificultad: Bajo. Definir fecha/rango y proyección.
-- [ ] **T-02 — Implementar consulta/UI.** Dificultad: Bajo. Aplicar ownership y pruebas.
+- [x] **T-01 — Documentar filtros.** Dificultad: Bajo. Definir fecha/rango y proyección.
+- [x] **T-02 — Implementar consulta/UI.** Dificultad: Bajo. Aplicar ownership y pruebas.
 ## Criterios de aceptación
 ### CA-01 — Consulta propia
 **Dado** PROFESSIONAL **cuando** consulta calendario **entonces** ve sus bloques con sede/franja.
@@ -37,15 +37,17 @@ Lectura propia por fecha/rango con sede y franja.
 ### CA-03 — Aislamiento
 **Dado** bloque ajeno **cuando** consulta **entonces** no se expone.
 ## Definition of Done
-- [ ] CA-01 a CA-03 con evidencia.
-- [ ] Contrato/UI y pruebas de filtro/ownership disponibles.
-- [ ] Trazabilidad Scrum actualizada.
+- [x] CA-01 a CA-03 con evidencia.
+- [x] Contrato/UI y pruebas de filtro/ownership disponibles.
+- [x] Trazabilidad Scrum actualizada.
 ## Evidencia de validación
 | Elemento | Resultado | Evidencia | Observación |
 |---|---|---|---|
-| CA-01 a CA-03 | Pendiente | — | No implementada |
-| DoD | Pendiente | — | — |
+| CA-01 a CA-03 | Validado backend | `GET /professional/availability-blocks` en `AppointmentLifecycleIntegrationTest#professionalCannotEditOrDeleteCommittedBlockOrOverlapBlocks` | Solo bloques propios |
+| UI | Validado | Mi disponibilidad; `docs/evidence/s3-s4/03-e2e-docker.md` | Calendario visible |
+| DoD | Validado | `docs/evidence/s3-s4/01-red-green.md`, `02-hook.md`, `docs/evidence/s3-s4/03-e2e-docker.md` | Backend 40 pruebas, web 13 Vitest, E2E 47/47 |
 ## Historial de validación
 - 2026-09-17 — Recreada con skill en `Pendiente de aprobación`.
+- 2026-09-29 — Validada en S3/S4: evidencia en docs/evidence/s3-s4/ y docs/evidence/loops/.
 ## Notas y decisiones
 - No incluye citas; esas pertenecen a [[HU-025-consultar-agenda-profesional]].
