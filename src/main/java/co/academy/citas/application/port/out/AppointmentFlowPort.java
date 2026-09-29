@@ -28,6 +28,8 @@ public interface AppointmentFlowPort {
     Optional<RescheduleRequest> requestReschedule(UUID requestId, UUID appointmentId, UUID patientId,
                                                   LocalDateTime startsAt, LocalDateTime endsAt, String reason);
     Optional<RescheduleRequest> decideReschedule(UUID requestId, UUID adminId, boolean approve, String reason);
+    List<StatusChange> statusHistory(UUID appointmentId);
+    record StatusChange(String status, String source, LocalDateTime changedAt, String reason) { }
     record SpecialtyDetails(long id, String code, String name, int durationMinutes, boolean active) { }
     record Slot(LocalDateTime startsAt, LocalDateTime endsAt) { }
     record AvailabilityBlock(UUID id, long locationId, LocalDateTime startsAt, LocalDateTime endsAt) { }

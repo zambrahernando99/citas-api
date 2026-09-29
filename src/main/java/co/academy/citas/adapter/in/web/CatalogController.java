@@ -59,16 +59,8 @@ public class CatalogController {
     @PatchMapping("/admin/specialties/{id}/active") SpecialtyResponse setSpecialtyActive(@PathVariable long id,@RequestBody ActiveRequest request) { return SpecialtyResponse.from(catalogs.setSpecialtyActive(id,request.active())); }
     @DeleteMapping("/admin/specialties/{id}") ResponseEntity<Void> deactivateSpecialty(@PathVariable long id) { catalogs.setSpecialtyActive(id,false); return ResponseEntity.noContent().build(); }
 
+    // HU-007 / PRD RF-05: los regímenes son catálogo fijo precargado (V7); solo lectura, sin CRUD administrativo.
     @GetMapping("/admin/regimes") List<CatalogResponse> allRegimes() { return catalogs.regimes(false).stream().map(CatalogResponse::from).toList(); }
-    @PostMapping("/admin/regimes") ResponseEntity<CatalogResponse> createRegime(@Valid @RequestBody CatalogRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(CatalogResponse.from(catalogs.saveRegime(request.code(),request.name(),true)));
-    }
-    @PutMapping("/admin/regimes/{code}") CatalogResponse updateRegime(@PathVariable String code,@Valid @RequestBody CatalogRequest request) {
-        boolean active=catalogs.regimes(false).stream().filter(item->item.code().equals(code)).findFirst().orElseThrow().active();
-        return CatalogResponse.from(catalogs.saveRegime(code,request.name(),active));
-    }
-    @PatchMapping("/admin/regimes/{code}/active") CatalogResponse setRegimeActive(@PathVariable String code,@RequestBody ActiveRequest request) { return CatalogResponse.from(catalogs.setRegimeActive(code,request.active())); }
-    @DeleteMapping("/admin/regimes/{code}") ResponseEntity<Void> deactivateRegime(@PathVariable String code) { catalogs.setRegimeActive(code,false); return ResponseEntity.noContent().build(); }
 
     private UUID actor(Principal principal) { return UUID.fromString(principal.getName()); }
     record CatalogRequest(@NotBlank String code,@NotBlank String name) { }

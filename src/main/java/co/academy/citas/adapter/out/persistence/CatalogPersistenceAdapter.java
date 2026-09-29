@@ -37,16 +37,6 @@ public class CatalogPersistenceAdapter implements CatalogPort {
         return jdbc.query("select 0,code,name,active from regime_catalog"+(activeOnly?" where active=true":"")+" order by name",
                 (rs,row)->new CatalogItem(rs.getLong(1),rs.getString(2),rs.getString(3),rs.getBoolean(4)));
     }
-    @Override public CatalogItem saveRegime(String code,String name,boolean active) {
-        jdbc.update("insert into regime_catalog(code,name,active) values(?,?,?) on duplicate key update name=values(name),active=values(active)",code,name,active);
-        return jdbc.queryForObject("select 0,code,name,active from regime_catalog where code=?",
-                (rs,row)->new CatalogItem(rs.getLong(1),rs.getString(2),rs.getString(3),rs.getBoolean(4)),code);
-    }
-    @Override public CatalogItem changeRegimeActive(String code,boolean active) {
-        jdbc.update("update regime_catalog set active=? where code=?",active,code);
-        return jdbc.queryForObject("select 0,code,name,active from regime_catalog where code=?",
-                (rs,row)->new CatalogItem(rs.getLong(1),rs.getString(2),rs.getString(3),rs.getBoolean(4)),code);
-    }
     @Override public List<SpecialtyItem> specialties(boolean activeOnly) {
         return jdbc.query("select id,code,name,duration_minutes,active from specialty_catalog"+(activeOnly?" where active=true":"")+" order by name",
                 (rs,row)->new SpecialtyItem(rs.getLong(1),rs.getString(2),rs.getString(3),rs.getInt(4),rs.getBoolean(5)));

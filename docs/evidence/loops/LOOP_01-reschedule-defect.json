@@ -1,0 +1,25 @@
+{
+  "loop": "LOOP_01_GUIADO_SIMPLE",
+  "goal": "Corregir defecto de reprogramación: segunda solicitud con una PENDING devolvía 500 (BINARY→BIGINT) y la aprobación no quedaba auditada",
+  "hu": ["HU-022", "HU-024", "HU-028"],
+  "trigger": "Prueba roja AppointmentLifecycleIntegrationTest.rescheduleKeepsOriginalWhilePendingRejectReleasesNewAndApproveSwaps",
+  "maxIterations": 3,
+  "stopCondition": "Prueba objetivo en verde + suites AppointmentFlow/AppointmentLifecycle sin nuevas fallas",
+  "escalation": "Cambio de esquema, UI o pruebas => decisión humana",
+  "iterations": [
+    {
+      "iteration": 1,
+      "builder": "completed",
+      "builderScope": ["src/main/java/co/academy/citas/adapter/out/persistence/AppointmentFlowPersistenceAdapter.java"],
+      "changes": [
+        "requestReschedule: mapeo rs.getLong(1) -> rs.getBytes(1) en verificación de PENDING existente",
+        "decideReschedule: inserta appointment_status_history (APPROVED, ADMIN, 'Reprogramación aprobada: <inicio>') al aprobar"
+      ],
+      "backendTests": "17 run / 14 pass / 3 fail (fuera de alcance: historial, bandeja, IDs)",
+      "frontendBuild": "n/a (sin cambios UI)",
+      "verifier": "PASS",
+      "verifierEvidence": "diff limitado a 1 archivo; src/test sin cambios; criterios HU-022/024/028 revisados; transacción a nivel de clase en AppointmentFlowService"
+    }
+  ],
+  "result": "COMPLETED"
+}

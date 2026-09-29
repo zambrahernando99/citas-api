@@ -139,7 +139,7 @@ public class AppointmentFlowPersistenceAdapter implements AppointmentFlowPort {
         List<Appointment> originals = appointments("where a.id = ? and a.patient_user_id = ? and a.status_code = 'APPROVED'",
                 new Object[]{bytes(appointmentId), bytes(patientId)});
         if (originals.isEmpty() || !jdbc.query("select id from appointment_reschedule where appointment_id = ? and status_code = 'PENDING'",
-                (rs, row) -> rs.getLong(1), bytes(appointmentId)).isEmpty()) return Optional.empty();
+                (rs, row) -> rs.getBytes(1), bytes(appointmentId)).isEmpty()) return Optional.empty();
         Appointment original = originals.get(0);
         List<Long> slotIds = jdbc.query("select id from professional_slot where professional_id = ? and location_id = ? and starts_at >= ? and ends_at <= ? and appointment_id is null and reschedule_request_id is null order by starts_at for update",
                 (rs, row) -> rs.getLong(1), bytes(original.professionalId()), original.locationId(), startsAt, endsAt);
@@ -171,10 +171,18 @@ public class AppointmentFlowPersistenceAdapter implements AppointmentFlowPort {
                     request.startsAt(), request.endsAt(), bytes(request.appointmentId()));
             jdbc.update("update professional_slot set appointment_id = ?, reschedule_request_id = null where reschedule_request_id = ?",
                     bytes(request.appointmentId()), bytes(requestId));
+            String historyReason = "Reprogramación aprobada: " + request.startsAt()
+                    + (reason == null || reason.isBlank() ? "" : " - " + reason.trim());
+            jdbc.update("insert into appointment_status_history (appointment_id, status_code, changed_by_user_id, change_source, reason) values (?, 'APPROVED', ?, 'ADMIN', ?)",
+                    bytes(request.appointmentId()), bytes(adminId), historyReason);
         } else {
             jdbc.update("update professional_slot set reschedule_request_id = null where reschedule_request_id = ?", bytes(requestId));
         }
         return findReschedule(requestId);
+    }
+    @Override public List<StatusChange> statusHistory(UUID appointmentId) {
+        return jdbc.query("select status_code, change_source, changed_at, reason from appointment_status_history where appointment_id = ? order by changed_at, id",
+                (rs, row) -> new StatusChange(rs.getString(1), rs.getString(2), rs.getTimestamp(3).toLocalDateTime(), rs.getString(4)), bytes(appointmentId));
     }
     private Optional<RescheduleRequest> findReschedule(UUID id) {
         return reschedules("where r.id = ?", bytes(id)).stream().findFirst();

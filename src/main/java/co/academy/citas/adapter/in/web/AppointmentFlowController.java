@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -100,6 +101,18 @@ public class AppointmentFlowController {
         return RescheduleResponse.from(useCase.decideReschedule(actor(principal), requestId,
                 new AppointmentFlowUseCase.DecisionCommand(request.approve(), request.reason())));
     }
+    @GetMapping("/appointments/{appointmentId}/history")
+    List<HistoryResponse> history(Authentication authentication, @PathVariable UUID appointmentId) {
+        boolean admin = authentication.getAuthorities().stream().anyMatch(value -> "ROLE_ADMIN".equals(value.getAuthority()));
+        return useCase.history(actor(authentication), admin, appointmentId).stream().map(HistoryResponse::from).toList();
+    }
+    @GetMapping("/admin/inbox")
+    List<InboxItemResponse> inbox(@RequestParam(required = false) String type, @RequestParam(required = false) Long locationId,
+                                  @RequestParam(required = false) UUID professionalId, @RequestParam(required = false) Long specialtyId,
+                                  @RequestParam(required = false) LocalDate from, @RequestParam(required = false) LocalDate to) {
+        return useCase.inbox(new AppointmentFlowUseCase.InboxFilter(type, locationId, professionalId, specialtyId, from, to))
+                .stream().map(InboxItemResponse::from).toList();
+    }
     private UUID actor(Principal principal) { return UUID.fromString(principal.getName()); }
     record AvailabilityRequest(long locationId, @NotNull LocalDateTime startsAt, @NotNull LocalDateTime endsAt) { }
     record ReservationRequest(@NotNull UUID professionalId, long locationId, long specialtyId, @NotNull LocalDateTime startsAt, String reason) { }
@@ -113,8 +126,26 @@ public class AppointmentFlowController {
     }
     record AppointmentResponse(UUID id, String status, String specialty, LocalDateTime startsAt, LocalDateTime endsAt,
                                int durationMinutes, String professionalName, String location, String patientName,
-                               String reason, String decisionReason, boolean reschedulePending) {
-        static AppointmentResponse from(AppointmentFlowPort.Appointment value) { return new AppointmentResponse(value.id(), value.status(), value.specialtyName(), value.startsAt(), value.endsAt(), value.durationMinutes(), value.professionalName(), value.locationName(), value.patientName(), value.reason(), value.decisionReason(), value.reschedulePending()); }
+                               String reason, String decisionReason, boolean reschedulePending,
+                               UUID professionalId, long specialtyId, long locationId) {
+        static AppointmentResponse from(AppointmentFlowPort.Appointment value) { return new AppointmentResponse(value.id(), value.status(), value.specialtyName(), value.startsAt(), value.endsAt(), value.durationMinutes(), value.professionalName(), value.locationName(), value.patientName(), value.reason(), value.decisionReason(), value.reschedulePending(), value.professionalId(), value.specialtyId(), value.locationId()); }
+    }
+    record HistoryResponse(String status, String source, LocalDateTime changedAt, String reason) {
+        static HistoryResponse from(AppointmentFlowPort.StatusChange value) { return new HistoryResponse(value.status(), value.source(), value.changedAt(), value.reason()); }
+    }
+    record InboxItemResponse(String type, UUID id, UUID appointmentId, String status, String specialty, String professionalName,
+                             String location, String patientName, LocalDateTime startsAt, LocalDateTime endsAt,
+                             LocalDateTime previousStartsAt, String reason, UUID professionalId, long specialtyId, long locationId) {
+        static InboxItemResponse from(AppointmentFlowUseCase.InboxItem item) {
+            var appointment = item.appointment(); var reschedule = item.reschedule();
+            return reschedule == null
+                    ? new InboxItemResponse(item.type(), item.id(), appointment.id(), appointment.status(), appointment.specialtyName(),
+                            appointment.professionalName(), appointment.locationName(), appointment.patientName(), appointment.startsAt(),
+                            appointment.endsAt(), null, appointment.reason(), appointment.professionalId(), appointment.specialtyId(), appointment.locationId())
+                    : new InboxItemResponse(item.type(), item.id(), appointment.id(), reschedule.status(), appointment.specialtyName(),
+                            appointment.professionalName(), appointment.locationName(), appointment.patientName(), reschedule.startsAt(),
+                            reschedule.endsAt(), appointment.startsAt(), reschedule.reason(), appointment.professionalId(), appointment.specialtyId(), appointment.locationId());
+        }
     }
     record RescheduleResponse(UUID id, UUID appointmentId, String status, LocalDateTime startsAt, LocalDateTime endsAt,
                               String reason, String decisionReason, String patientName, String specialty,

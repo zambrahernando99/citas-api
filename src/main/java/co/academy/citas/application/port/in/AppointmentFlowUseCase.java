@@ -24,6 +24,12 @@ public interface AppointmentFlowUseCase {
     AppointmentFlowPort.RescheduleRequest requestReschedule(UUID patientId, UUID appointmentId,
                                                               LocalDateTime startsAt, String reason);
     AppointmentFlowPort.RescheduleRequest decideReschedule(UUID adminId, UUID requestId, DecisionCommand command);
+    List<AppointmentFlowPort.StatusChange> history(UUID actorId, boolean admin, UUID appointmentId);
+    List<InboxItem> inbox(InboxFilter filter);
+    record InboxFilter(String type, Long locationId, UUID professionalId, Long specialtyId, LocalDate from, LocalDate to) { }
+    record InboxItem(String type, UUID id, AppointmentFlowPort.Appointment appointment, AppointmentFlowPort.RescheduleRequest reschedule) {
+        public LocalDateTime startsAt() { return reschedule == null ? appointment.startsAt() : reschedule.startsAt(); }
+    }
     record ReservationCommand(UUID professionalId, long locationId, long specialtyId, LocalDateTime startsAt, String reason) { }
     record DecisionCommand(boolean approve, String reason) { }
 }

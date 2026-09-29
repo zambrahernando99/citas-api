@@ -8,8 +8,10 @@ import co.academy.citas.application.port.out.AppointmentFlowPort;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -133,5 +135,36 @@ public class AppointmentFlowService implements AppointmentFlowUseCase {
             throw new InvalidAppointmentException("A rejection reason is required");
         return port.decideReschedule(requestId, adminId, command.approve(), command.reason())
                 .orElseThrow(AppointmentNotFoundException::new);
+    }
+
+    @Override @Transactional(readOnly = true)
+    public List<AppointmentFlowPort.StatusChange> history(UUID actorId, boolean admin, UUID appointmentId) {
+        AppointmentFlowPort.Appointment appointment = port.findAppointment(appointmentId).orElseThrow(AppointmentNotFoundException::new);
+        boolean authorized = admin || appointment.patientId().equals(actorId)
+                || port.professionalForUser(actorId).filter(appointment.professionalId()::equals).isPresent();
+        if (!authorized) throw new AppointmentNotFoundException();
+        return port.statusHistory(appointmentId);
+    }
+
+    @Override @Transactional(readOnly = true)
+    public List<InboxItem> inbox(InboxFilter filter) {
+        if (filter.from() != null && filter.to() != null && filter.to().isBefore(filter.from()))
+            throw new InvalidAppointmentException("The date range is invalid");
+        String type = filter.type() == null || filter.type().isBlank() ? null : filter.type();
+        if (type != null && !"APPOINTMENT".equals(type) && !"RESCHEDULE".equals(type))
+            throw new InvalidAppointmentException("The inbox type is invalid");
+        Stream<InboxItem> requested = port.pendingAppointments().stream()
+                .map(value -> new InboxItem("APPOINTMENT", value.id(), value, null));
+        Stream<InboxItem> reschedules = port.pendingReschedules().stream()
+                .map(value -> new InboxItem("RESCHEDULE", value.id(), port.findAppointment(value.appointmentId()).orElseThrow(), value));
+        return Stream.concat(requested, reschedules)
+                .filter(item -> type == null || type.equals(item.type()))
+                .filter(item -> filter.locationId() == null || item.appointment().locationId() == filter.locationId())
+                .filter(item -> filter.professionalId() == null || item.appointment().professionalId().equals(filter.professionalId()))
+                .filter(item -> filter.specialtyId() == null || item.appointment().specialtyId() == filter.specialtyId())
+                .filter(item -> filter.from() == null || !item.startsAt().toLocalDate().isBefore(filter.from()))
+                .filter(item -> filter.to() == null || !item.startsAt().toLocalDate().isAfter(filter.to()))
+                .sorted(Comparator.comparing(InboxItem::startsAt))
+                .toList();
     }
 }

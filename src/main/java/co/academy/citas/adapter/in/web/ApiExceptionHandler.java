@@ -13,6 +13,7 @@ import co.academy.citas.application.exception.InvalidAppointmentException;
 import co.academy.citas.application.exception.InvalidPasswordResetTokenException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
@@ -90,10 +91,15 @@ public class ApiExceptionHandler {
     @ExceptionHandler(InvalidAppointmentException.class)
     ResponseEntity<ProblemDetail> invalidAppointment(InvalidAppointmentException exception) { return response(problem(HttpStatus.BAD_REQUEST, "invalid_appointment", exception.getMessage())); }
 
+    // Los mensajes de IllegalArgumentException son textos de validación de negocio sin datos sensibles.
     @ExceptionHandler(IllegalArgumentException.class)
-    ResponseEntity<ProblemDetail> invalidOffer() {
-        return response(problem(HttpStatus.BAD_REQUEST, "invalid_professional_offer",
-                "Professional specialties or locations are invalid"));
+    ResponseEntity<ProblemDetail> invalidOffer(IllegalArgumentException exception) {
+        return response(problem(HttpStatus.BAD_REQUEST, "invalid_professional_offer", exception.getMessage()));
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    ResponseEntity<ProblemDetail> resourceNotFound() {
+        return response(problem(HttpStatus.NOT_FOUND, "not_found", "The requested resource was not found"));
     }
 
     private ProblemDetail problem(HttpStatus status, String code, String detail) {

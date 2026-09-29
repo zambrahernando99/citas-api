@@ -10,8 +10,6 @@ public interface CatalogPort {
     List<PlanItem> plans(long epsId, boolean activeOnly);
     PlanItem savePlan(Long id, long epsId, String code, String name, boolean active);
     List<CatalogItem> regimes(boolean activeOnly);
-    CatalogItem saveRegime(String code, String name, boolean active);
-    CatalogItem changeRegimeActive(String code, boolean active);
     List<SpecialtyItem> specialties(boolean activeOnly);
     SpecialtyItem saveSpecialty(Long id, String code, String name, int durationMinutes, boolean active);
     SpecialtyItem changeSpecialtyActive(long id, boolean active);

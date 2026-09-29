@@ -25,8 +25,6 @@ public class CatalogManagementService {
     }
     public PlanItem setPlanActive(long id,boolean active) { return catalogs.changePlanActive(id,active); }
     @Transactional(readOnly=true) public List<CatalogItem> regimes(boolean active) { return catalogs.regimes(active); }
-    public CatalogItem saveRegime(String code,String name,boolean active) { return catalogs.saveRegime(required(code),required(name),active); }
-    public CatalogItem setRegimeActive(String code,boolean active) { return catalogs.changeRegimeActive(code,active); }
     @Transactional(readOnly=true) public List<SpecialtyItem> specialties(boolean active) { return catalogs.specialties(active); }
     public SpecialtyItem saveSpecialty(Long id,String code,String name,int duration,boolean active) {
         if(duration!=30&&duration!=60) throw new IllegalArgumentException("Specialty duration must be 30 or 60 minutes");
