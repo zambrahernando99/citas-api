@@ -47,3 +47,19 @@
 - Decisión: la desactivación conserva el perfil y todas sus relaciones de especialidades y sedes. El profesional inactivo queda excluido de la consulta de profesionales habilitados para operaciones nuevas. S3 no crea, modifica ni cancela compromisos, bloques, reservas o agenda: esas capacidades pertenecen a S4.
 - Consecuencia: el estado se cambia mediante una actualización reversible; no existe borrado físico de profesional ni de sus asignaciones.
 - Evidencia de aprobación: precondición confirmada por el usuario al solicitar la implementación de S3.
+
+## DEC-007 — Recuperación, perfil y regímenes para S4
+
+- Estado: aprobada por el usuario.
+- Fecha: 2026-09-24.
+- Decisiones: las retenciones de citas/reprogramaciones no vencen automáticamente y se liberan al decidir; el profesional sólo puede cerrar la atención después de la hora fin; el token de recuperación sólo se expone en perfil `dev`; el catálogo de regímenes será configurable por ADMIN; el perfil editable se limita a nombres, apellidos, email y teléfono.
+- Consecuencias: el API conserva retenciones pendientes hasta resolución; la API/UI no expone tokens en ambientes no-dev; se implementa CRUD lógico de regímenes y el contrato anota la excepción autorizada a HU-007; `/auth/me` no devuelve documentos ni permite modificar roles/identidad.
+- Evidencia de aprobación: respuestas explícitas del usuario a las preguntas de decisión durante esta implementación.
+
+## DEC-008 — Cancelación mientras hay reprogramación pendiente
+
+- Estado: aprobada por el usuario.
+- Fecha: 2026-09-29.
+- Decisión: bloquear la cancelación de la cita original mientras su solicitud de reprogramación siga `PENDING`; primero debe resolver ADMIN.
+- Consecuencia: ni la franja original ni la nueva se liberan por inferencia; la UI indica que la cita está a la espera de decisión.
+- Evidencia de aprobación: respuesta explícita del usuario a la pregunta de aclaración del 2026-09-29.

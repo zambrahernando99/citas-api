@@ -11,3 +11,9 @@
 
 - Contrato exacto de los endpoints y webhook, autenticación, política de reintento e idempotencia.
 - Estrategia para evitar recordatorios duplicados.
+
+## PENDIENTE DE EJECUCIÓN S5
+
+- El entregable funcional requiere una instancia n8n, MCP operativo, acceso al API desde n8n y credenciales Gmail individuales, según `GUIA_SESIONES_S2_S6.md`.
+- En la sesión del 2026-09-29 no hay herramientas MCP de n8n disponibles; tampoco se confirmó instancia ni credenciales. No se exportó un JSON incompleto ni se activó un flujo. Se requiere ejecutar e importar/exportar con la instancia real para demostrar el workflow, la invocación MCP, idempotencia y respuesta controlada.
+- Hasta conectar el trainer, no presentar S5 como completado. Mantener credenciales, tokens y OAuth fuera de los JSON versionados.

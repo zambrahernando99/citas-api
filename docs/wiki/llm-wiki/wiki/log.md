@@ -27,3 +27,11 @@
 - El GOAL de concurrencia declara HU-014, HU-017 y HU-028 implementadas y contrato de reserva aprobado; la evidencia del checkout los mantiene pendientes y sólo documenta el contrato S3. Se registró la discrepancia en `riesgos-y-preguntas-abiertas.md`; no se implementó un contrato S4 por no inventar comportamiento observable.
 
 - 2026-09-24 — LEARN — S3: se añadió el contrato de agenda, la migración V3 y pruebas de integración para bloques, slots, reserva y conflicto. HECHO: `mvn test` pasó con 17 pruebas usando el Maven local. PENDIENTE: validación del consumidor web y hook PASS tras reparar dependencias nativas de Node.
+
+## 2026-09-29 — LEARN / incremento S4
+
+- Clasificación: HECHO, DECISIÓN y PREGUNTA ABIERTA.
+- Se implementó en ambos repos el ciclo de vida HU-014..026 y HU-028 en el código: bloques, consulta/búsqueda y reserva; cancelación y reprogramación con retención; agenda/cierre profesional; bandeja y decisiones ADMIN; perfil, recuperación, afiliación y catálogos EPS/planes/especialidades. La UI consume servicios REST; se retiraron las pantallas y fixtures de demostración.
+- Decisiones registradas en DEC-007/008: no expirar retenciones; cierre sólo después de fin; token reset sólo en `dev`; regímenes configurables por ADMIN (excepción autorizada a HU-007); perfil editable limitado; cancelación bloqueada con reprogramación pendiente.
+- Evidencia técnica ejecutada: `mvn -o -Dmaven.compiler.useIncrementalCompilation=false -DskipTests compile` pasó con Java release 21; `npm run lint` y `npm run build` pasaron. No se ejecutaron pruebas, migraciones en MySQL ni flujos funcionales reales en esta sesión; no afirmar completitud del DoD hasta aportar esa evidencia.
+- S5 queda pendiente: no hay herramientas MCP de n8n ni instancia/credenciales conectadas. No se creó un JSON ficticio ni se activó una automatización.

@@ -7,6 +7,7 @@ import co.academy.citas.adapter.out.persistence.repository.SpringDataUserAccount
 import co.academy.citas.application.exception.DocumentAlreadyRegisteredException;
 import co.academy.citas.application.exception.EmailAlreadyRegisteredException;
 import co.academy.citas.application.port.out.UserAccountPort;
+import co.academy.citas.application.port.out.ProfilePort;
 import co.academy.citas.domain.account.Role;
 import co.academy.citas.domain.account.UserAccount;
 import java.util.Set;
@@ -16,14 +17,27 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserAccountPersistenceAdapter implements UserAccountPort {
+public class UserAccountPersistenceAdapter implements UserAccountPort, ProfilePort {
     private final SpringDataUserAccountRepository userRepository;
     private final SpringDataRoleRepository roleRepository;
+    private final org.springframework.jdbc.core.JdbcTemplate jdbc;
 
     public UserAccountPersistenceAdapter(SpringDataUserAccountRepository userRepository,
-                                         SpringDataRoleRepository roleRepository) {
+                                         SpringDataRoleRepository roleRepository,
+                                         org.springframework.jdbc.core.JdbcTemplate jdbc) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.jdbc = jdbc;
+    }
+
+    @Override public void update(UUID userId, String givenNames, String familyNames, String email, String phone) {
+        try {
+            jdbc.update("update user_account set given_names = ?, family_names = ?, email = ?, phone = ? where id = ?",
+                    givenNames, familyNames, email, phone, java.nio.ByteBuffer.allocate(16)
+                            .putLong(userId.getMostSignificantBits()).putLong(userId.getLeastSignificantBits()).array());
+        } catch (DataIntegrityViolationException exception) {
+            throw new EmailAlreadyRegisteredException();
+        }
     }
 
     @Override

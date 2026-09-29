@@ -10,6 +10,7 @@ import co.academy.citas.application.exception.ProfessionalNotFoundException;
 import co.academy.citas.application.exception.AppointmentConflictException;
 import co.academy.citas.application.exception.AppointmentNotFoundException;
 import co.academy.citas.application.exception.InvalidAppointmentException;
+import co.academy.citas.application.exception.InvalidPasswordResetTokenException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -56,6 +57,11 @@ public class ApiExceptionHandler {
     @ExceptionHandler(InvalidRefreshTokenException.class)
     ResponseEntity<ProblemDetail> invalidRefresh() {
         return response(problem(HttpStatus.UNAUTHORIZED, "invalid_refresh_token", "Refresh token is invalid"));
+    }
+
+    @ExceptionHandler(InvalidPasswordResetTokenException.class)
+    ResponseEntity<ProblemDetail> invalidPasswordResetToken() {
+        return response(problem(HttpStatus.BAD_REQUEST, "invalid_password_reset_token", "Password reset token is invalid or expired"));
     }
 
     @ExceptionHandler(ProfessionalCodeAlreadyRegisteredException.class)

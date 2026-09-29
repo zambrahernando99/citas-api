@@ -166,3 +166,41 @@ S3 no expone ni implementa bloques de disponibilidad, reservas, slots ni agenda 
 - `GET /api/v1/admin/appointments/requested` y `POST /api/v1/admin/appointments/{id}/decision`: ADMIN consulta y decide. `approve=true` mantiene la retención; `approve=false` exige `reason`, cambia a `REJECTED` y libera los slots.
 - Errores: `slot_unavailable` (`409`), `invalid_appointment` (`400`) y `appointment_not_found` (`404`), además de los errores de autenticación/rol existentes.
 - La retención no vence automáticamente en S3: permanece hasta una decisión administrativa; la política de vencimiento sigue como pregunta abierta para una HU posterior.
+
+## DECISIÓN — Contrato de ciclo de vida de citas S4
+
+- Base `/api/v1`; JSON; access JWT por `Authorization: Bearer`.
+- `GET /appointments/mine?status&from&to`: USER autenticado recibe únicamente sus citas, con profesional, sede, especialidad, inicio/fin, duración, estado, motivos disponibles y `reschedulePending`.
+- `DELETE /appointments/{appointmentId}` con body opcional `{"reason":"..."}`: cancela una cita futura propia en `REQUESTED` o `APPROVED`, responde `204`, libera slots y registra `CANCELLED` en historial. No es reactivable por esta API. Si existe reprogramación `PENDING`, se bloquea hasta la decisión ADMIN; el frontend refleja ese estado y no ofrece cancelar.
+- `POST /appointments/{appointmentId}/reschedules` con `{"startsAt":"...","reason":"..."}`: USER solicita nueva franja para una cita `APPROVED` propia y futura; conserva profesional, sede y especialidad, reserva los slots nuevos como `PENDING` y preserva la franja original. Responde `201` con el identificador y los datos de la solicitud. Retenciones sin vencimiento automático.
+- `GET /admin/reschedules/pending`: ADMIN consulta solicitudes pendientes.
+- `POST /admin/reschedules/{requestId}/decision` con `{"approve":true|false,"reason":"..."}`: ADMIN resuelve una vez. Aprobación intercambia slots y actualiza fecha/hora; rechazo exige motivo, libera slots nuevos y conserva cita original.
+- Citas generales usan `MEDICINA_GENERAL` (ya sembrada en migración S3), son aprobadas al reservar y admiten cancelación; solicitudes especializadas nacen `REQUESTED`.
+- Errores conservan el formato `application/problem+json`: `slot_unavailable` (`409`), `invalid_appointment` (`400`) y `appointment_not_found` (`404`, también para recursos ajenos o ya resueltos).
+- Cambios de estado de cita registran actor, fuente y motivo cuando corresponde en `appointment_status_history`; solicitudes de reprogramación guardan su estado/decisión separadamente.
+- `GET /professional/availability-blocks?from&to`: PROFESSIONAL autenticado consulta exclusivamente sus bloques por fecha.
+- `PUT /professional/availability-blocks/{blockId}` con `{"locationId":1,"startsAt":"...","endsAt":"..."}` edita un bloque propio futuro y sin citas/retenciones.
+- `DELETE /professional/availability-blocks/{blockId}` elimina un bloque propio futuro sin compromisos y libera su disponibilidad.
+- `POST /professional/availability-blocks` deriva el profesional de la identidad autenticada; el body contiene sede e inicio/fin, nunca un `professionalId` seleccionable por cliente.
+
+## DECISIÓN — Contrato de perfil, afiliación y catálogos
+
+- `GET /api/v1/auth/me` y `PUT /api/v1/auth/me` leen/actualizan exclusivamente la cuenta del principal. El body permite `givenNames`, `familyNames`, `email` y `phone`; rol, documento y propiedad de otros usuarios no son editables. La respuesta de perfil no incluye documento ni hash.
+- `GET /api/v1/eps`, `GET /api/v1/eps/{epsId}/plans` y `GET /api/v1/regimes` retornan catálogos activos. `GET/PUT /api/v1/profile/affiliation` administra la afiliación propia, validando relación plan-EPS y régimen activo.
+- ADMIN administra EPS (`/admin/eps`), planes (`/admin/eps/{epsId}/plans`, `/admin/plans/{id}`), especialidades (`/admin/specialties`) y regímenes (`/admin/regimes`). Las eliminaciones son lógicas; se conserva integridad referencial.
+- **DECISIÓN aprobada por el usuario el 2026-09-24:** los regímenes serán configurables por ADMIN. Esta decisión autoriza expresamente una excepción al texto original de HU-007, que los describía como fijos/de solo lectura. HIC/ICV y roles/estados siguen siendo catálogos fijos/de solo lectura.
+- **DECISIÓN aprobada por el usuario el 2026-09-24:** los únicos campos de perfil editables en HU-005 son nombres, apellidos, email y teléfono. La unicidad del email se conserva.
+
+## DECISIÓN — Recuperación de contraseña
+
+- `POST /api/v1/auth/password-reset-requests` acepta `{"email":"..."}` y responde `202 Accepted` de forma uniforme para cuentas existentes/inexistentes. El token es aleatorio, de un uso y con vencimiento configurable; sólo se persiste su huella hash.
+- `POST /api/v1/auth/password-resets` acepta `{"token":"...","newPassword":"..."}`. Un token inválido, expirado o consumido responde `400 invalid_password_reset_token`; la contraseña se almacena con el hasher adaptativo existente.
+- **DECISIÓN aprobada por el usuario el 2026-09-24:** el token se expone únicamente si el perfil Spring `dev` está activo y `PASSWORD_RESET_EXPOSE_TOKEN=true`. En otros entornos el API responde sin token; SMTP queda fuera de alcance conforme a HU-003.
+
+## DECISIÓN — Agenda profesional y operación
+
+- `GET /api/v1/professional/appointments?from&to&locationId` lista sólo citas `APPROVED` del profesional autenticado, con filtros inclusivos de fechas y sede.
+- `PATCH /api/v1/professional/appointments/{appointmentId}/completion` acepta `{"status":"COMPLETED"}` o `{"status":"NO_SHOW"}` sólo cuando terminó la cita y pertenece al profesional. La decisión temporal fue aprobada por el usuario el 2026-09-24: el cierre se habilita únicamente después de la hora de fin.
+- Una cancelación de cita con reprogramación `PENDING` asociada se rechaza hasta que ADMIN decida dicha solicitud; no se libera anticipadamente la franja propuesta.
+- **DECISIÓN aprobada por el usuario el 2026-09-24:** las retenciones de solicitudes no expiran automáticamente. La retención de una cita `REQUESTED` termina por decisión ADMIN; la de la propuesta de reprogramación termina por decisión ADMIN.
+- **DECISIÓN aprobada por el usuario el 2026-09-29:** si una cita tiene reprogramación `PENDING`, se bloquea su cancelación hasta la decisión ADMIN; la retención de la franja nueva no se libera por cancelación implícita.

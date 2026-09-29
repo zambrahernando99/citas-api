@@ -18,12 +18,47 @@ public class AppointmentFlowService implements AppointmentFlowUseCase {
     private final Clock clock;
     public AppointmentFlowService(AppointmentFlowPort port, Clock clock) { this.port = port; this.clock = clock; }
 
-    @Override public void createAvailability(UUID actorId, UUID professionalId, long locationId, LocalDateTime startsAt, LocalDateTime endsAt) {
-        if (!professionalId.equals(port.professionalForUser(actorId).orElse(null))) throw new InvalidAppointmentException("Only the owning professional can manage availability");
-        if (!startsAt.isAfter(LocalDateTime.now(clock)) || !endsAt.isAfter(startsAt) || !startsAt.toLocalDate().equals(endsAt.toLocalDate())
-                || startsAt.getMinute() % 30 != 0 || endsAt.getMinute() % 30 != 0 || !port.eligible(professionalId, locationId, -1))
-            throw new InvalidAppointmentException("The availability block is invalid");
+    @Override public void createAvailability(UUID actorId, long locationId, LocalDateTime startsAt, LocalDateTime endsAt) {
+        UUID professionalId = port.professionalForUser(actorId).orElseThrow(() -> new InvalidAppointmentException("Professional profile was not found"));
+        validateBlock(professionalId, locationId, startsAt, endsAt);
         port.createBlock(UUID.randomUUID(), professionalId, locationId, startsAt, endsAt);
+    }
+
+    @Override @Transactional(readOnly = true)
+    public List<AppointmentFlowPort.AvailabilityBlock> myAvailability(UUID actorId, LocalDate from, LocalDate to) {
+        UUID professionalId = port.professionalForUser(actorId).orElseThrow(() -> new InvalidAppointmentException("Professional profile was not found"));
+        if (from != null && to != null && to.isBefore(from)) throw new InvalidAppointmentException("The date range is invalid");
+        return port.availabilityBlocks(professionalId, from, to);
+    }
+    @Override @Transactional(readOnly = true)
+    public List<AppointmentFlowPort.Appointment> professionalAppointments(UUID actorId, LocalDate from, LocalDate to, Long locationId) {
+        UUID professionalId = port.professionalForUser(actorId).orElseThrow(() -> new InvalidAppointmentException("Professional profile was not found"));
+        if (from != null && to != null && to.isBefore(from)) throw new InvalidAppointmentException("The date range is invalid");
+        return port.professionalAppointments(professionalId, from, to, locationId);
+    }
+
+    @Override public AppointmentFlowPort.AvailabilityBlock updateAvailability(UUID actorId, UUID blockId, long locationId,
+                                                                                LocalDateTime startsAt, LocalDateTime endsAt) {
+        UUID professionalId = port.professionalForUser(actorId).orElseThrow(() -> new InvalidAppointmentException("Professional profile was not found"));
+        validateBlock(professionalId, locationId, startsAt, endsAt);
+        if (!port.updateBlock(blockId, professionalId, locationId, startsAt, endsAt))
+            throw new InvalidAppointmentException("The block is unavailable, committed, or does not belong to you");
+        return port.availabilityBlocks(professionalId, startsAt.toLocalDate(), endsAt.toLocalDate()).stream()
+                .filter(value -> value.id().equals(blockId)).findFirst().orElseThrow();
+    }
+
+    @Override public void deleteAvailability(UUID actorId, UUID blockId) {
+        UUID professionalId = port.professionalForUser(actorId).orElseThrow(() -> new InvalidAppointmentException("Professional profile was not found"));
+        if (!port.deleteBlock(blockId, professionalId))
+            throw new InvalidAppointmentException("The block is unavailable, committed, or does not belong to you");
+    }
+
+    private void validateBlock(UUID professionalId, long locationId, LocalDateTime startsAt, LocalDateTime endsAt) {
+        if (!startsAt.isAfter(LocalDateTime.now(clock)) || !endsAt.isAfter(startsAt)
+                || !startsAt.toLocalDate().equals(endsAt.toLocalDate()) || startsAt.getMinute() % 30 != 0
+                || endsAt.getMinute() % 30 != 0 || startsAt.getSecond() != 0 || endsAt.getSecond() != 0
+                || startsAt.getNano() != 0 || endsAt.getNano() != 0 || !port.eligible(professionalId, locationId, -1))
+            throw new InvalidAppointmentException("The availability block is invalid");
     }
 
     @Override @Transactional(readOnly = true) public List<AppointmentFlowPort.Slot> availability(long locationId, long specialtyId, UUID professionalId, LocalDate date) {
@@ -50,10 +85,53 @@ public class AppointmentFlowService implements AppointmentFlowUseCase {
 
     @Override @Transactional(readOnly = true) public List<AppointmentFlowPort.Appointment> pending() { return port.pendingAppointments(); }
 
+    @Override @Transactional(readOnly = true)
+    public List<AppointmentFlowPort.Appointment> myAppointments(UUID patientId, String status, LocalDate from, LocalDate to) {
+        if (from != null && to != null && to.isBefore(from)) throw new InvalidAppointmentException("The date range is invalid");
+        return port.userAppointments(patientId, status, from, to);
+    }
+    @Override @Transactional(readOnly = true)
+    public List<AppointmentFlowPort.RescheduleRequest> pendingReschedules() { return port.pendingReschedules(); }
+
     @Override public AppointmentFlowPort.Appointment decide(UUID adminId, UUID appointmentId, DecisionCommand command) {
         if (!command.approve() && (command.reason() == null || command.reason().isBlank())) throw new InvalidAppointmentException("A rejection reason is required");
         String status = command.approve() ? "APPROVED" : "REJECTED";
         if (!port.decide(appointmentId, adminId, status, command.reason())) throw new AppointmentNotFoundException();
         return port.findAppointment(appointmentId).orElseThrow();
+    }
+
+    @Override public void cancel(UUID patientId, UUID appointmentId, String reason) {
+        if (!port.cancel(appointmentId, patientId, reason, LocalDateTime.now(clock)))
+            throw new AppointmentNotFoundException();
+    }
+    @Override public void closeAppointment(UUID actorId, UUID appointmentId, String status) {
+        if (!"COMPLETED".equals(status) && !"NO_SHOW".equals(status))
+            throw new InvalidAppointmentException("Only COMPLETED or NO_SHOW can close an appointment");
+        UUID professionalId = port.professionalForUser(actorId).orElseThrow(() -> new InvalidAppointmentException("Professional profile was not found"));
+        if (!port.closeAppointment(appointmentId, professionalId, status, LocalDateTime.now(clock)))
+            throw new AppointmentNotFoundException();
+    }
+
+    @Override public AppointmentFlowPort.RescheduleRequest requestReschedule(UUID patientId, UUID appointmentId,
+                                                                               LocalDateTime startsAt, String reason) {
+        AppointmentFlowPort.Appointment appointment = port.findAppointment(appointmentId)
+                .filter(value -> value.patientId().equals(patientId))
+                .orElseThrow(AppointmentNotFoundException::new);
+        if (!"APPROVED".equals(appointment.status()) || !appointment.startsAt().isAfter(LocalDateTime.now(clock)))
+            throw new InvalidAppointmentException("Only an approved future appointment can be rescheduled");
+        if (startsAt == null || !startsAt.isAfter(LocalDateTime.now(clock))
+                || startsAt.getMinute() % 30 != 0 || startsAt.getSecond() != 0 || startsAt.getNano() != 0)
+            throw new InvalidAppointmentException("The requested time is invalid");
+        LocalDateTime endsAt = startsAt.plusMinutes(appointment.durationMinutes());
+        return port.requestReschedule(UUID.randomUUID(), appointmentId, patientId, startsAt, endsAt, reason)
+                .orElseThrow(AppointmentConflictException::new);
+    }
+
+    @Override public AppointmentFlowPort.RescheduleRequest decideReschedule(UUID adminId, UUID requestId,
+                                                                              DecisionCommand command) {
+        if (!command.approve() && (command.reason() == null || command.reason().isBlank()))
+            throw new InvalidAppointmentException("A rejection reason is required");
+        return port.decideReschedule(requestId, adminId, command.approve(), command.reason())
+                .orElseThrow(AppointmentNotFoundException::new);
     }
 }

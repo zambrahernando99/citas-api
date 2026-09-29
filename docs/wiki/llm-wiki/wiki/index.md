@@ -2,7 +2,7 @@
 
 ## Estado
 
- Inicializada el 2026-09-17. El corte inicial integra especificaciones del laboratorio. Las HU-001 a HU-028 fueron aprobadas para su planificación e implementación el 2026-09-22. GOAL 01 (HU-001/HU-002) cuenta con evidencia backend, MySQL, REST y consumidor web. S3 incorpora el contrato y backend de bloques, slots, disponibilidad, reserva general/especializada, decisión ADMIN y auditoría; falta comprobar el consumidor visual y los hooks con dependencias web reparadas. Desde 2026-09-22, MySQL se inicializa además desde `database/reference/db.sql` por decisión explícita del usuario.
+Inicializada el 2026-09-17. Las HU-001 a HU-028 fueron aprobadas para planificación e implementación el 2026-09-22. S3 tenía contrato y backend; S4 amplió ciclo de vida, agenda profesional, recuperación, perfil, afiliación y catálogos con su consumidor web REST y sin fixtures. Compilación backend, typecheck y build frontend pasaron el 2026-09-29; no se ejecutaron pruebas ni validación integrada MySQL para este incremento. Las decisiones de producto acordadas están en DEC-007/008. S5 continúa pendiente de ejecutar contra n8n/MCP real y de evidencia de workflow activo. Desde 2026-09-22, MySQL se inicializa además desde `database/reference/db.sql` por decisión explícita del usuario.
 
 ## Páginas
 

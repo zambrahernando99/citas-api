@@ -10,11 +10,13 @@ import co.academy.citas.application.service.AppointmentFlowService;
 import co.academy.citas.application.service.ProfessionalCatalogService;
 import co.academy.citas.application.service.ProfessionalOfferService;
 import co.academy.citas.application.service.RegistrationService;
+import co.academy.citas.application.service.PasswordResetService;
 import java.time.Clock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
 public class ApplicationBeansConfiguration {
@@ -61,5 +63,14 @@ public class ApplicationBeansConfiguration {
                                                 Clock clock) {
         return new AuthenticationService(userAccountPort, passwordHashingPort, jwtTokenPort,
                 tokenFingerprintPort, authSessionPort, clock);
+    }
+
+    @Bean
+    PasswordResetService passwordResetService(co.academy.citas.application.port.out.PasswordResetPort passwordResetPort,
+                                               PasswordHashingPort passwordHashingPort,
+                                               TokenFingerprintPort tokenFingerprintPort,
+                                               Clock clock,
+                                               @Value("${app.password-reset.ttl-seconds:900}") long ttlSeconds) {
+        return new PasswordResetService(passwordResetPort, passwordHashingPort, tokenFingerprintPort, clock, ttlSeconds);
     }
 }
