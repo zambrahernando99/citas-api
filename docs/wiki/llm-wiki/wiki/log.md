@@ -43,3 +43,5 @@
 - Contratos: historial de cita, bandeja admin, ids aditivos en `AppointmentResponse`, regímenes solo lectura, `not_found` 404 y `/error` permitido.
 - Decisiones DEC-009..012: regímenes fijos, hook PowerShell sobre staged, volumen `web_node_modules` + perfil `dev`, Vitest.
 - Riesgos: HMR en bind mount Windows, régimen SUB heredado, ADMIN por SQL, hook sobre árbol de trabajo.
+- 2026-10-01 — LEARN — Enmienda a DEC-005: BD de la app separada de la de referencia (`citas_app` frente a `citas_fcv_training`) para que Flyway no falle en V3. Verificado con MySQL limpio: V1..V7 aplicadas y health UP.
+- 2026-10-01 — LEARN — S5 backend: contrato de recordatorios WF-001, V8 `appointment_reminder_delivery`, filtro `X-Automation-Key` y decisiones DEC-013..017. Red → Green: 10/10 errores antes de implementar, luego suite 54/54. JSON WF-001 saneado (`active: false`) y hook de export n8n con FAIL/PASS. Pendiente: importar/ejecutar en la instancia n8n, credenciales Gmail OAuth y evidencia MCP.

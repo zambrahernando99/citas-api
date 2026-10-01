@@ -7,6 +7,7 @@ import co.academy.citas.application.port.out.TokenFingerprintPort;
 import co.academy.citas.application.port.out.UserAccountPort;
 import co.academy.citas.application.service.AuthenticationService;
 import co.academy.citas.application.service.AppointmentFlowService;
+import co.academy.citas.application.service.AppointmentReminderService;
 import co.academy.citas.application.service.ProfessionalCatalogService;
 import co.academy.citas.application.service.ProfessionalOfferService;
 import co.academy.citas.application.service.RegistrationService;
@@ -34,6 +35,13 @@ public class ApplicationBeansConfiguration {
     AppointmentFlowService appointmentFlowService(co.academy.citas.application.port.out.AppointmentFlowPort appointmentFlowPort,
                                                   Clock clock) {
         return new AppointmentFlowService(appointmentFlowPort, clock);
+    }
+
+    @Bean
+    AppointmentReminderService appointmentReminderService(co.academy.citas.application.port.out.AppointmentReminderPort appointmentReminderPort,
+                                                          Clock clock, AutomationProperties automationProperties) {
+        return new AppointmentReminderService(appointmentReminderPort, clock,
+                automationProperties.getDefaultWindowHours(), automationProperties.getMaxAttempts());
     }
 
     @Bean

@@ -11,6 +11,8 @@ import co.academy.citas.application.exception.AppointmentConflictException;
 import co.academy.citas.application.exception.AppointmentNotFoundException;
 import co.academy.citas.application.exception.InvalidAppointmentException;
 import co.academy.citas.application.exception.InvalidPasswordResetTokenException;
+import co.academy.citas.application.exception.InvalidReminderRequestException;
+import co.academy.citas.application.exception.ReminderNotApplicableException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -90,6 +92,12 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(InvalidAppointmentException.class)
     ResponseEntity<ProblemDetail> invalidAppointment(InvalidAppointmentException exception) { return response(problem(HttpStatus.BAD_REQUEST, "invalid_appointment", exception.getMessage())); }
+
+    @ExceptionHandler(InvalidReminderRequestException.class)
+    ResponseEntity<ProblemDetail> invalidReminderRequest(InvalidReminderRequestException exception) { return response(problem(HttpStatus.BAD_REQUEST, "invalid_reminder_request", exception.getMessage())); }
+
+    @ExceptionHandler(ReminderNotApplicableException.class)
+    ResponseEntity<ProblemDetail> reminderNotApplicable() { return response(problem(HttpStatus.CONFLICT, "reminder_not_applicable", "Appointment is no longer approved")); }
 
     // Los mensajes de IllegalArgumentException son textos de validación de negocio sin datos sensibles.
     @ExceptionHandler(IllegalArgumentException.class)

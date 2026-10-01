@@ -214,3 +214,13 @@ S3 no expone ni implementa bloques de disponibilidad, reservas, slots ni agenda 
 - Regímenes: solo `GET /api/v1/regimes` y `GET /api/v1/admin/regimes`; el CRUD admin fue retirado (PRD RF-05).
 - Errores: `NoSuchElementException` → `404` con `code` `not_found`; `IllegalArgumentException` conserva `code` `invalid_professional_offer` pero `detail` usa el mensaje real de validación.
 - `/error` está permitido en seguridad para conservar `404`/`405` reales; el `401` queda solo para peticiones sin token.
+
+## DECISIÓN — Automatización de recordatorios WF-001 (S5, 2026-10-01)
+
+- Estado: implementado y validado en backend (`AutomationReminderIntegrationTest` 10/10, `AppointmentReminderServiceTest` 4/4; suite 54/54). Consumidor: n8n, no `citas-web`; el contrato web no cambia.
+- Autenticación: cabecera `X-Automation-Key` comparada en tiempo constante con `AUTOMATION_API_KEY` (mínimo 32 caracteres). Concede solo `ROLE_AUTOMATION` y solo en `/api/v1/automation/**`. Sin clave o clave incorrecta → `401`; JWT de USER/PROFESSIONAL/ADMIN → `403`; la clave en cualquier otra ruta → `401` (DEC-013).
+- `GET /api/v1/automation/reminders/due?windowHours=24`: citas `APPROVED` con inicio en `(now, now + windowHours]` (UTC), sin entrega `SENT` para la ventana y con menos de `REMINDER_MAX_ATTEMPTS` (3) fallos. `windowHours` 1..72, por defecto `REMINDER_DEFAULT_WINDOW_HOURS`; fuera de rango → `400 invalid_reminder_request`. Máximo 200 por llamada, ordenadas por inicio.
+  - Respuesta: `{ "windowCode": "H24", "generatedAt", "items": [ { "appointmentId", "startsAt", "endsAt", "locationName", "specialtyName", "professionalName", "patientFirstName", "patientEmail" } ] }`. No expone documento, teléfono, afiliación ni motivo (DEC-016).
+- `POST /api/v1/automation/reminders/{appointmentId}/deliveries` con `{ "windowCode": "H24", "status": "SENT"|"FAILED", "channel"?: "GMAIL", "providerMessageId"?: string<=128, "errorCode"?: string<=64 }` → `200` con `{ appointmentId, windowCode, channel, status, attemptCount, providerMessageId, errorCode }`.
+  - Idempotente por `(appointmentId, windowCode)`: un `SENT` repetido o un `FAILED` tardío no cambian un `SENT` existente; cada `FAILED` suma un intento (DEC-014).
+  - Cita inexistente → `404 appointment_not_found`; cita que ya no está `APPROVED` → `409 reminder_not_applicable`; payload inválido → `400 validation_failed` o `invalid_reminder_request`.

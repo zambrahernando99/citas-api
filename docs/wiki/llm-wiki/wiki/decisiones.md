@@ -39,6 +39,7 @@
 - Decisión: por autorización explícita del usuario, MySQL inicializa el esquema con `database/reference/db.sql`, montado de solo lectura en `docker-entrypoint-initdb.d`.
 - Consecuencia: las tablas de catálogo, disponibilidad, citas y datos sintéticos de la referencia quedan disponibles desde la creación del volumen. Flyway conserva temporalmente las tablas de identidad de S2 (`user_account`, `role_catalog`, `auth_session`) para no romper el contrato REST existente; su convergencia con `users`, `roles` y `refresh_tokens` se aborda en una HU posterior y no se declara completada aquí.
 - Evidencia de aprobación: confirmación explícita del usuario para usar `C:\Users\IA ACADEMY 3\Documents\hernando\citas\citas\database\reference\db.sql`.
+- Enmienda 2026-10-01 (autorizada por el usuario): HECHO, `db.sql` crea y usa `citas_fcv_training`; si la BD de la app tiene ese nombre, Flyway falla en V3. DECISIÓN: la app usa `MYSQL_DATABASE`/`DB_NAME=citas_app` (valor por defecto en `docker-compose.yml` y `.env.example`); `db.sql` sigue montado y deja la referencia en `citas_fcv_training` solo para consulta. Evidencia: un MySQL 8.4 nuevo con el montaje creó ambas BD (21 tablas de referencia) y la API aplicó V1..V7 en `citas_app` con health `UP`.
 
 ## DEC-006 — Desactivación operativa de profesional en S3
 
@@ -86,3 +87,30 @@
 
 - Estado: aprobada por el usuario.
 - Decisión: las pruebas de `citas-web` usan Vitest (`src/components/screens/*.test.tsx`).
+
+## DEC-013 — Identidad de máquina para n8n (S5, 2026-10-01)
+
+- Estado: aprobada (propuesta en `planS5.md`; el usuario no pidió alternativa y autorizó iniciar S5).
+- Decisión: n8n se autentica con `X-Automation-Key` (variable `AUTOMATION_API_KEY`, nunca versionada) que solo concede `ROLE_AUTOMATION` sobre `/api/v1/automation/**`. Sin clave configurada los endpoints quedan cerrados.
+- Alternativa descartada: cuenta de servicio con JWT (TTL de 15 min, contraseña que gestionar y acceso a rutas de usuario).
+- Consecuencia: la clave se guarda en n8n como credencial *Header Auth*; el túnel ngrok además niega en el borde cualquier ruta fuera de `/api/v1/automation/` (`automations/ngrok/traffic-policy.yml`).
+
+## DEC-014 — Idempotencia de recordatorios (S5, 2026-10-01)
+
+- Estado: aprobada.
+- Decisión: tabla `appointment_reminder_delivery` (V8) con `UNIQUE (appointment_id, window_code)`. `SENT` es definitivo; `FAILED` se reintenta en ejecuciones posteriores hasta 3 intentos. No se guarda email ni cuerpo del mensaje.
+
+## DEC-015 — Destinatario en modo laboratorio (S5, 2026-10-01)
+
+- Estado: aprobada.
+- Decisión: los pacientes son sintéticos; el nodo `Config` de WF-001 tiene `testRecipient`. Si tiene valor, todos los correos van a ese buzón de laboratorio; el valor se configura en n8n y el JSON versionado lo deja vacío.
+
+## DEC-016 — Datos mínimos hacia n8n (S5, 2026-10-01)
+
+- Estado: aprobada.
+- Decisión: el endpoint de recordatorios solo devuelve lo que el correo usa (ver contrato). Documento, teléfono, afiliación y motivos no salen del API.
+
+## DEC-017 — Túnel ngrok para n8n remoto (S5, 2026-10-01)
+
+- Estado: aprobada por el usuario ("ngrok").
+- Decisión: la instancia n8n del trainer es remota y llega a la API local por `ngrok http 8080 --traffic-policy-file automations/ngrok/traffic-policy.yml`. El authtoken de ngrok es personal y vive solo en la configuración local de ngrok.

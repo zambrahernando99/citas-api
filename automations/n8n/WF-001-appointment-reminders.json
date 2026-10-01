@@ -1,0 +1,200 @@
+{
+  "name": "WF-001 Recordatorio de citas próximas",
+  "active": false,
+  "nodes": [
+    {
+      "id": "6a0c0f7e-0001-4c1a-9a01-000000000001",
+      "name": "Cada hora",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 300],
+      "parameters": {
+        "rule": {
+          "interval": [
+            { "field": "hours", "hoursInterval": 1 }
+          ]
+        }
+      }
+    },
+    {
+      "id": "6a0c0f7e-0001-4c1a-9a01-000000000002",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [220, 300],
+      "notes": "apiBaseUrl: URL pública de ngrok (sin barra final). testRecipient: buzón de laboratorio; si está vacío se usa el email del paciente sintético. Ningún valor aquí es secreto.",
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            { "id": "cfg-api", "name": "apiBaseUrl", "type": "string", "value": "https://REEMPLAZAR-CON-DOMINIO-NGROK" },
+            { "id": "cfg-window", "name": "windowHours", "type": "number", "value": 24 },
+            { "id": "cfg-recipient", "name": "testRecipient", "type": "string", "value": "" }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "6a0c0f7e-0001-4c1a-9a01-000000000003",
+      "name": "Consultar citas APPROVED",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 300],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.apiBaseUrl }}/api/v1/automation/reminders/due",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "windowHours", "value": "={{ $json.windowHours }}" }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": { "name": "citas-api X-Automation-Key" }
+      }
+    },
+    {
+      "id": "6a0c0f7e-0001-4c1a-9a01-000000000004",
+      "name": "API no disponible",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [660, 480],
+      "parameters": {
+        "errorMessage": "=citas-api no disponible tras 3 intentos; no se enviaron recordatorios. Detalle: {{ $json.error?.message || 'sin detalle' }}"
+      }
+    },
+    {
+      "id": "6a0c0f7e-0001-4c1a-9a01-000000000005",
+      "name": "Separar citas",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [660, 300],
+      "parameters": {
+        "fieldToSplitOut": "items",
+        "options": {}
+      }
+    },
+    {
+      "id": "6a0c0f7e-0001-4c1a-9a01-000000000006",
+      "name": "Enviar recordatorio Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [880, 300],
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "={{ $('Config').first().json.testRecipient || $json.patientEmail }}",
+        "subject": "=Recordatorio: cita de {{ $json.specialtyName }} el {{ DateTime.fromISO($json.startsAt, { zone: 'utc' }).setZone('America/Bogota').toFormat('dd/MM/yyyy HH:mm') }}",
+        "emailType": "text",
+        "message": "=Hola {{ $json.patientFirstName }},\n\nTe recordamos tu cita aprobada:\n- Especialidad: {{ $json.specialtyName }}\n- Profesional: {{ $json.professionalName }}\n- Sede: {{ $json.locationName }}\n- Fecha y hora (Bogotá): {{ DateTime.fromISO($json.startsAt, { zone: 'utc' }).setZone('America/Bogota').toFormat('dd/MM/yyyy HH:mm') }}\n\nSi no puedes asistir, cancela o reprograma desde la aplicación.\n\nMensaje automático de laboratorio con datos sintéticos.",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": { "name": "Gmail OAuth2 (gmail.send)" }
+      }
+    },
+    {
+      "id": "6a0c0f7e-0001-4c1a-9a01-000000000007",
+      "name": "Registrar SENT",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1100, 200],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "onError": "continueRegularOutput",
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Config').first().json.apiBaseUrl }}/api/v1/automation/reminders/{{ $('Separar citas').item.json.appointmentId }}/deliveries",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ windowCode: $('Consultar citas APPROVED').first().json.windowCode, status: 'SENT', channel: 'GMAIL', providerMessageId: $json.id }) }}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": { "name": "citas-api X-Automation-Key" }
+      }
+    },
+    {
+      "id": "6a0c0f7e-0001-4c1a-9a01-000000000008",
+      "name": "Registrar FAILED",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1100, 420],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "onError": "continueRegularOutput",
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Config').first().json.apiBaseUrl }}/api/v1/automation/reminders/{{ $('Separar citas').item.json.appointmentId }}/deliveries",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ windowCode: $('Consultar citas APPROVED').first().json.windowCode, status: 'FAILED', channel: 'GMAIL', errorCode: 'gmail_send_failed' }) }}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": { "name": "citas-api X-Automation-Key" }
+      }
+    }
+  ],
+  "connections": {
+    "Cada hora": {
+      "main": [[{ "node": "Config", "type": "main", "index": 0 }]]
+    },
+    "Config": {
+      "main": [[{ "node": "Consultar citas APPROVED", "type": "main", "index": 0 }]]
+    },
+    "Consultar citas APPROVED": {
+      "main": [
+        [{ "node": "Separar citas", "type": "main", "index": 0 }],
+        [{ "node": "API no disponible", "type": "main", "index": 0 }]
+      ]
+    },
+    "Separar citas": {
+      "main": [[{ "node": "Enviar recordatorio Gmail", "type": "main", "index": 0 }]]
+    },
+    "Enviar recordatorio Gmail": {
+      "main": [
+        [{ "node": "Registrar SENT", "type": "main", "index": 0 }],
+        [{ "node": "Registrar FAILED", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Bogota",
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all",
+    "saveManualExecutions": true
+  },
+  "pinData": {},
+  "tags": [
+    { "name": "citas-s5" }
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}
