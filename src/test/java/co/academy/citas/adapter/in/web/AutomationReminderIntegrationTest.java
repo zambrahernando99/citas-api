@@ -48,7 +48,7 @@ class AutomationReminderIntegrationTest {
     }
 
     @BeforeEach void setup() {
-        for (String table : new String[]{"appointment_reminder_delivery", "appointment_status_history", "professional_slot", "appointment_reschedule",
+        for (String table : new String[]{"automation_event_outbox", "appointment_reminder_delivery", "appointment_status_history", "professional_slot", "appointment_reschedule",
                 "availability_block", "appointment_record", "professional_specialty", "professional_location", "professional_profile",
                 "user_account_role", "user_account"})
             jdbc.update("delete from " + table);

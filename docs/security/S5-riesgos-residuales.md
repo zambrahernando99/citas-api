@@ -23,3 +23,13 @@ Escala: P = probabilidad, I = impacto (Baja / Media / Alta).
 
 - Datos reales de pacientes (el proyecto usa solo datos sintéticos).
 - Endurecimiento de la instancia n8n del trainer (cuentas, copias, retención): es responsabilidad del trainer.
+
+## Adiciones S6 (WF-002 y WF-003, 2026-10-01)
+
+| # | Riesgo | P | I | Mitigación aplicada | Riesgo aceptado |
+|---|---|---|---|---|---|
+| R13 | Instancia n8n compartida: credenciales de otros estudiantes autoasignables a nodos nuevos | Alta | Alta | Workflows con prefijo `Hernando-`, inactivos, sin credenciales; nodo Gmail en `serviceAccount` hasta que el dueño elija la suya; verificación con `get_workflow_details` (DEC-020) | Cualquier usuario del proyecto compartido puede ver y editar estos workflows |
+| R14 | Filtración de `N8N_STATUS_WEBHOOK_SECRET` | Media | Media | Header Auth en el webhook; secreto ≥ 32 caracteres solo en `.env` y en n8n; solo https | Con el secreto alguien podría disparar correos con payloads válidos al buzón configurado |
+| R15 | Correo duplicado en WF-002 si Gmail envía pero la respuesta 200 se pierde | Baja | Baja | `X-Citas-Event-Id` viaja en cada intento para poder deduplicar | No se deduplica en n8n; puede llegar un segundo correo |
+| R16 | Eventos acumulados si n8n está caído | Media | Baja | Outbox con reintentos hasta 5 y estado FAILED consultable | Tras ~81 min de reintentos el evento queda FAILED y requiere reenvío manual |
+| R17 | Resumen WF-003 con datos de toda la operación | Baja | Baja | Endpoint sin PII (sede, especialidad, estado, hora) | El conteo por sede es visible para quien reciba el correo |

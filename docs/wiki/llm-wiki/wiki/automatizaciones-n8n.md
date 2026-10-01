@@ -16,9 +16,15 @@
 - Acceso desde n8n remoto: ngrok con `automations/ngrok/traffic-policy.yml`, que niega todo fuera de `/api/v1/automation/`.
 - Servidor MCP de la instancia: `https://impulso-n8n.aiacademy.com.co/mcp-server/http` (dato del usuario).
 
+## HECHOS S6 (2026-10-01)
+
+- WF-002 `Hernando-WF-002-status-notifications` (id `lLZQOsvQpmVLXYah`): webhook `POST /webhook/hernando-citas-status` con Header Auth → validación → Switch por tipo/estado (5 ramas) → Gmail → `Respond to Webhook` 200/400/503. Probado por MCP con datos simulados: rama de reprogramación rechazada y payload inválido → 400 sin Gmail.
+- WF-003 `Hernando-WF-003-daily-operational-summary` (id `Z8YOsBjSqA39K1pu`): Schedule 20:00 Bogotá → API diaria → Code que agrupa por sede, estado y especialidad → Gmail; rama de incidencia si la API falla. Probado por MCP con 5 citas simuladas.
+- Ambos inactivos y sin credenciales (DEC-020). JSON en `automations/n8n/`.
+
 ## PREGUNTAS ABIERTAS
 
-- Contrato del webhook de WF-002 (S6).
+- Ninguna de contrato. Falta la ejecución real con credenciales propias (Gmail OAuth, Header Auth) y el webhook activo.
 
 ## PENDIENTE DE EJECUCIÓN S5
 

@@ -1,0 +1,262 @@
+{
+  "name": "Hernando-WF-003-daily-operational-summary",
+  "active": false,
+  "nodes": [
+    {
+      "id": "77e86b2e-728b-4258-be6b-4a5b69b11514",
+      "name": "Cada día 20:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        96
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "daysInterval": 1,
+              "triggerAtHour": 20,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "9512c5d4-01e9-4ec8-8f75-5812e33d8840",
+      "name": "Config resumen",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        96
+      ],
+      "parameters": {
+        "mode": "manual",
+        "includeOtherFields": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c-api",
+              "name": "apiBaseUrl",
+              "type": "string",
+              "value": "https://REEMPLAZAR-CON-DOMINIO-NGROK"
+            },
+            {
+              "id": "c-recipient",
+              "name": "recipient",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "c-date",
+              "name": "date",
+              "type": "string",
+              "value": "={{ $now.setZone(\"America/Bogota\").toISODate() }}"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "1465503f-ba47-4397-9796-c64d6cb0c1fc",
+      "name": "Consultar citas del día",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        448,
+        96
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.apiBaseUrl }}/api/v1/automation/appointments/daily",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "date",
+              "value": "={{ $json.date }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "1acb2878-edd4-4bfb-b8e3-de632744ad94",
+      "name": "Agrupar por sede, estado y especialidad",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "const report = $input.first().json;\nconst items = Array.isArray(report.items) ? report.items : [];\nconst count = function (key) {\n  const acc = {};\n  for (const item of items) { const k = item[key] || 'Sin dato'; acc[k] = (acc[k] || 0) + 1; }\n  return acc;\n};\nconst byLocation = {};\nfor (const item of items) {\n  const loc = item.locationName || 'Sin sede';\n  if (!byLocation[loc]) byLocation[loc] = { total: 0 };\n  byLocation[loc].total += 1;\n  byLocation[loc][item.status] = (byLocation[loc][item.status] || 0) + 1;\n}\nconst byStatus = count('status');\nconst bySpecialty = count('specialtyName');\nconst tracked = ['APPROVED', 'COMPLETED', 'NO_SHOW', 'CANCELLED'];\nconst lines = [];\nlines.push('Resumen operativo del ' + report.date + ' (' + report.timezone + ')');\nlines.push('Total de citas: ' + items.length);\nlines.push('');\nlines.push('Por estado:');\nfor (const s of tracked) lines.push('- ' + s + ': ' + (byStatus[s] || 0));\nfor (const s of Object.keys(byStatus)) if (!tracked.includes(s)) lines.push('- ' + s + ': ' + byStatus[s]);\nlines.push('');\nlines.push('Por sede:');\nfor (const loc of Object.keys(byLocation).sort()) {\n  const d = byLocation[loc];\n  lines.push('- ' + loc + ': ' + d.total + ' (' + tracked.map(function (s) { return s + ' ' + (d[s] || 0); }).join(', ') + ')');\n}\nlines.push('');\nlines.push('Por especialidad:');\nfor (const sp of Object.keys(bySpecialty).sort()) lines.push('- ' + sp + ': ' + bySpecialty[sp]);\nlines.push('');\nlines.push('Incidencias de API: ninguna.');\nlines.push('Datos sintéticos de laboratorio.');\nreturn [{ json: { date: report.date, total: items.length, byStatus: byStatus, byLocation: byLocation, bySpecialty: bySpecialty, subject: 'Resumen operativo ' + report.date + ': ' + items.length + ' citas', body: lines.join('\\n') } }];"
+      }
+    },
+    {
+      "id": "f81fa03c-23b8-479b-9cff-4e5f3c043ea1",
+      "name": "Enviar resumen Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        896,
+        96
+      ],
+      "parameters": {
+        "authentication": "serviceAccount",
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "={{ $(\"Config resumen\").first().json.recipient }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "text",
+        "message": "={{ $json.body }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "notes": "Antes de probar: Authentication = OAuth2 y elige TU credencial Gmail (scope gmail.send). No uses credenciales de otros."
+    },
+    {
+      "id": "938a2d5f-f376-45c4-95f7-75d0ab56bc3d",
+      "name": "Resumen de incidencia API",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        672,
+        192
+      ],
+      "parameters": {
+        "mode": "manual",
+        "includeOtherFields": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "i-subject",
+              "name": "subject",
+              "type": "string",
+              "value": "=Resumen operativo {{ $(\"Config resumen\").first().json.date }}: API no disponible"
+            },
+            {
+              "id": "i-body",
+              "name": "body",
+              "type": "string",
+              "value": "=No se pudo generar el resumen operativo del {{ $(\"Config resumen\").first().json.date }}.\n\nIncidencia de API: citas-api no respondió tras 3 intentos.\nDetalle: {{ $json.error?.message || $json.message || \"sin detalle\" }}\n\nRevisa que la API y el túnel ngrok estén activos."
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "8b3512ee-934f-44a9-9c7c-6625322890e9",
+      "name": "Nota WF-003",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        384,
+        192
+      ],
+      "parameters": {
+        "content": "## WF-003 Hernando\nCada día 20:00 (America/Bogota): citas del día sin datos personales, agrupadas por sede, estado y especialidad.\nSi la API falla tras 3 intentos se envía un correo de incidencia.\nAntes de probar: apiBaseUrl (ngrok) y recipient en Config resumen; credencial Header Auth X-Automation-Key en Consultar citas del día; Gmail en OAuth2 con TU credencial.",
+        "color": 4
+      }
+    }
+  ],
+  "connections": {
+    "Cada día 20:00": {
+      "main": [
+        [
+          {
+            "node": "Config resumen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config resumen": {
+      "main": [
+        [
+          {
+            "node": "Consultar citas del día",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar citas del día": {
+      "main": [
+        [
+          {
+            "node": "Agrupar por sede, estado y especialidad",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Resumen de incidencia API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agrupar por sede, estado y especialidad": {
+      "main": [
+        [
+          {
+            "node": "Enviar resumen Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resumen de incidencia API": {
+      "main": [
+        [
+          {
+            "node": "Enviar resumen Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Bogota",
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "pinData": {},
+  "tags": [
+    {
+      "name": "citas-s6"
+    }
+  ],
+  "meta": {
+    "exportedFrom": "n8n MCP get_workflow_details",
+    "instanceWorkflowId": "Z8YOsBjSqA39K1pu",
+    "exportedAt": "2026-10-01"
+  }
+}

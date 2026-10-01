@@ -14,3 +14,9 @@ Un correo de laboratorio con métricas simples:
 - incidencias de API si existen.
 
 No requiere información privada real.
+
+## Implementación (S6, 2026-10-01)
+
+- Backend: `GET /api/v1/automation/appointments/daily?date=` con `X-Automation-Key`, sin datos personales (DEC-019).
+- Workflow `Hernando-WF-003-daily-operational-summary` (id `Z8YOsBjSqA39K1pu`): Schedule 20:00 America/Bogota → Config → API (3 reintentos) → Code agrupa por sede, estado y especialidad → Gmail; si la API falla, correo de incidencia.
+- Puesta en marcha: `apiBaseUrl` (ngrok) y `recipient` en `Config resumen`, credencial Header Auth `X-Automation-Key` en `Consultar citas del día`, Gmail en OAuth2 con tu credencial.

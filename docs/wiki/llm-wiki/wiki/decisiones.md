@@ -114,3 +114,20 @@
 
 - Estado: aprobada por el usuario ("ngrok").
 - Decisión: la instancia n8n del trainer es remota y llega a la API local por `ngrok http 8080 --traffic-policy-file automations/ngrok/traffic-policy.yml`. El authtoken de ngrok es personal y vive solo en la configuración local de ngrok.
+
+## DEC-018 — Outbox transaccional para WF-002 (S6, 2026-10-01)
+
+- Estado: aprobada (el usuario pidió trabajar WF-002 y WF-003).
+- Decisión: la transición y el evento se guardan en la misma transacción (`automation_event_outbox`, V9); un despachador programado los envía al webhook con reintentos. Si la transición falla, no hay evento; si n8n está caído, el evento espera.
+- Alternativa descartada: llamar al webhook dentro de la petición del usuario (acopla la latencia y la disponibilidad de n8n a la API y pierde eventos si falla).
+
+## DEC-019 — WF-003 agrupa en n8n con datos sin PII (S6, 2026-10-01)
+
+- Estado: aprobada.
+- Decisión: la API entrega las citas del día solo con sede, especialidad, estado y hora; n8n agrupa (nodo Code) y arma el correo. Si la API falla tras 3 intentos, se envía un correo de incidencia.
+
+## DEC-020 — Instancia n8n compartida: sin credenciales ajenas (S6, 2026-10-01)
+
+- Estado: aprobada.
+- HECHO: la cuenta MCP opera en el proyecto personal del trainer, compartido con otros estudiantes. Al crear un workflow con nodo Gmail, n8n autoasignó la credencial OAuth de otro estudiante.
+- Decisión: los workflows de Hernando llevan el prefijo `Hernando-`, se crean inactivos y sin credenciales; el nodo Gmail queda en `serviceAccount` (sin credenciales en la instancia) para evitar la autoasignación, y Hernando cambia a OAuth2 con su propia credencial. No se modifican workflows ni credenciales de otros.
