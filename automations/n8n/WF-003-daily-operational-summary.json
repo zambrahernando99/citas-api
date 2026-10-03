@@ -91,7 +91,12 @@
       "retryOnFail": true,
       "maxTries": 3,
       "waitBetweenTries": 5000,
-      "onError": "continueErrorOutput"
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "httpHeaderAuth": {
+          "name": "Hernando X-Automation-Key"
+        }
+      }
     },
     {
       "id": "1acb2878-edd4-4bfb-b8e3-de632744ad94",
@@ -118,7 +123,7 @@
         96
       ],
       "parameters": {
-        "authentication": "serviceAccount",
+        "authentication": "oAuth2",
         "resource": "message",
         "operation": "send",
         "sendTo": "={{ $(\"Config resumen\").first().json.recipient }}",
@@ -129,7 +134,12 @@
           "appendAttribution": false
         }
       },
-      "notes": "Antes de probar: Authentication = OAuth2 y elige TU credencial Gmail (scope gmail.send). No uses credenciales de otros."
+      "notes": "Usa tu propia credencial Gmail OAuth2 (no la de otros usuarios de la instancia).",
+      "credentials": {
+        "gmailOAuth2": {
+          "name": "Hernando Gmail"
+        }
+      }
     },
     {
       "id": "938a2d5f-f376-45c4-95f7-75d0ab56bc3d",
@@ -155,7 +165,7 @@
               "id": "i-body",
               "name": "body",
               "type": "string",
-              "value": "=No se pudo generar el resumen operativo del {{ $(\"Config resumen\").first().json.date }}.\n\nIncidencia de API: citas-api no respondió tras 3 intentos.\nDetalle: {{ $json.error?.message || $json.message || \"sin detalle\" }}\n\nRevisa que la API y el túnel ngrok estén activos."
+              "value": "=No se pudo generar el resumen operativo del {{ $(\"Config resumen\").first().json.date }}.\n\nIncidencia de API: citas-api no respondió tras 3 intentos.\nDetalle: {{ ($json.error?.message || $json.message || \"sin detalle\").slice(0, 200) }}\n\nRevisa que la API y el túnel ngrok estén activos."
             }
           ]
         },
@@ -257,6 +267,7 @@
   "meta": {
     "exportedFrom": "n8n MCP get_workflow_details",
     "instanceWorkflowId": "Z8YOsBjSqA39K1pu",
-    "exportedAt": "2026-10-01"
+    "exportedAt": "2026-10-03",
+    "note": "Credenciales solo por nombre; apiBaseUrl y destinatario vacíos a propósito: se configuran en la instancia."
   }
 }

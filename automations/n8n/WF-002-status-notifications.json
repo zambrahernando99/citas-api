@@ -17,6 +17,11 @@
         "authentication": "headerAuth",
         "responseMode": "responseNode",
         "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "name": "Hernando webhook secret"
+        }
       }
     },
     {
@@ -427,7 +432,7 @@
         300
       ],
       "parameters": {
-        "authentication": "serviceAccount",
+        "authentication": "oAuth2",
         "resource": "message",
         "operation": "send",
         "sendTo": "={{ $json.testRecipient || $json.patientEmail }}",
@@ -438,11 +443,16 @@
           "appendAttribution": false
         }
       },
-      "notes": "Antes de probar: Authentication = OAuth2 y elige TU credencial Gmail (scope gmail.send). No uses credenciales de otros.",
+      "notes": "Usa tu propia credencial Gmail OAuth2 (no la de otros usuarios de la instancia).",
       "onError": "continueErrorOutput",
       "retryOnFail": true,
       "maxTries": 2,
-      "waitBetweenTries": 2000
+      "waitBetweenTries": 2000,
+      "credentials": {
+        "gmailOAuth2": {
+          "name": "Hernando Gmail"
+        }
+      }
     },
     {
       "id": "c2ac4266-38cd-435c-8d3b-4cca02847365",
@@ -680,6 +690,7 @@
   "meta": {
     "exportedFrom": "n8n MCP get_workflow_details",
     "instanceWorkflowId": "lLZQOsvQpmVLXYah",
-    "exportedAt": "2026-10-01"
+    "exportedAt": "2026-10-03",
+    "note": "Credenciales solo por nombre; apiBaseUrl y destinatario vacíos a propósito: se configuran en la instancia."
   }
 }

@@ -89,7 +89,12 @@
       "retryOnFail": true,
       "maxTries": 3,
       "waitBetweenTries": 5000,
-      "onError": "continueErrorOutput"
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "httpHeaderAuth": {
+          "name": "Hernando X-Automation-Key"
+        }
+      }
     },
     {
       "id": "e3f2170d-121d-4d3d-a79b-3accf6c6d8cb",
@@ -115,7 +120,7 @@
         96
       ],
       "parameters": {
-        "authentication": "serviceAccount",
+        "authentication": "oAuth2",
         "resource": "message",
         "operation": "send",
         "sendTo": "={{ $(\"Config\").first().json.testRecipient || $json.patientEmail }}",
@@ -126,8 +131,13 @@
           "appendAttribution": false
         }
       },
-      "notes": "Antes de probar: Authentication = OAuth2 y elige TU credencial Gmail (scope gmail.send). No uses credenciales de otros.",
-      "onError": "continueErrorOutput"
+      "notes": "Usa tu propia credencial Gmail OAuth2 (no la de otros usuarios de la instancia).",
+      "onError": "continueErrorOutput",
+      "credentials": {
+        "gmailOAuth2": {
+          "name": "Hernando Gmail"
+        }
+      }
     },
     {
       "id": "e80b2bdc-5e6a-4f67-8933-66d4eacbb7d0",
@@ -153,7 +163,12 @@
       "retryOnFail": true,
       "maxTries": 3,
       "waitBetweenTries": 3000,
-      "onError": "continueRegularOutput"
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "httpHeaderAuth": {
+          "name": "Hernando X-Automation-Key"
+        }
+      }
     },
     {
       "id": "7da9086b-dfc6-4561-a756-c5e927b978bc",
@@ -165,7 +180,7 @@
         288
       ],
       "parameters": {
-        "errorMessage": "=citas-api no disponible tras 3 intentos; no se enviaron recordatorios. Detalle: {{ $json.error?.message || \"sin detalle\" }}"
+        "errorMessage": "=citas-api no disponible tras 3 intentos; no se enviaron recordatorios. Detalle: {{ ($json.error?.message || \"sin detalle\").slice(0, 200) }}"
       }
     },
     {
@@ -192,7 +207,12 @@
       "retryOnFail": true,
       "maxTries": 3,
       "waitBetweenTries": 3000,
-      "onError": "continueRegularOutput"
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "httpHeaderAuth": {
+          "name": "Hernando X-Automation-Key"
+        }
+      }
     },
     {
       "id": "6ab61036-3351-42c9-ba0c-3e81f2c67f01",
@@ -296,6 +316,7 @@
   "meta": {
     "exportedFrom": "n8n MCP get_workflow_details",
     "instanceWorkflowId": "0LEn366VVamn82Ix",
-    "exportedAt": "2026-10-03"
+    "exportedAt": "2026-10-03",
+    "note": "Credenciales solo por nombre; apiBaseUrl y destinatario vacíos a propósito: se configuran en la instancia."
   }
 }

@@ -23,13 +23,11 @@
 - WF-001 `Hernando-WF-001-appointment-reminders` (id `0LEn366VVamn82Ix`), creado por MCP el 2026-10-03 con el mismo prefijo; probado con 2 citas simuladas (ejecución 75).
 - Los tres inactivos y sin credenciales (DEC-020). JSON en `automations/n8n/`.
 
+## HECHOS — ejecución real (2026-10-03)
+
+- Los tres workflows se ejecutaron contra la API real por ngrok con credenciales propias del estudiante: WF-001 envió, no duplicó y manejó la API caída; WF-002 (activo) entregó 4 eventos con HTTP 200; WF-003 envió el resumen del día. Evidencia: `docs/evidence/s6/02-ejecucion-real.md` con capturas.
+- WF-002 queda activo; WF-001 y WF-003 inactivos hasta que el estudiante decida activarlos.
+
 ## PREGUNTAS ABIERTAS
 
-- Ninguna de contrato. Falta la ejecución real con credenciales propias (Gmail OAuth, Header Auth) y el webhook activo.
-
-## PENDIENTE DE EJECUCIÓN S5
-
-- El entregable funcional requiere una instancia n8n, MCP operativo, acceso al API desde n8n y credenciales Gmail individuales, según `GUIA_SESIONES_S2_S6.md`.
-- En la sesión del 2026-09-29 no hay herramientas MCP de n8n disponibles; tampoco se confirmó instancia ni credenciales. No se exportó un JSON incompleto ni se activó un flujo. Se requiere ejecutar e importar/exportar con la instancia real para demostrar el workflow, la invocación MCP, idempotencia y respuesta controlada.
-- 2026-10-01: backend, JSON y hook listos. Siguen pendientes la importación y ejecución controlada en la instancia, las credenciales Gmail OAuth propias, el túnel ngrok activo y la invocación MCP desde un agente con el conector n8n habilitado.
-- Hasta tener esa evidencia, no presentar S5 como completado. Mantener credenciales, tokens y OAuth fuera de los JSON versionados.
+- Ninguna.
