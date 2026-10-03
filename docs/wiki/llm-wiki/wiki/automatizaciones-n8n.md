@@ -12,7 +12,7 @@
 - Contrato de WF-001 implementado en `citas-api` (ver [contratos REST](contratos-rest.md), DEC-013..017): `GET /api/v1/automation/reminders/due` y `POST /api/v1/automation/reminders/{id}/deliveries`, autenticados con `X-Automation-Key`.
 - Duplicados: se evitan por `(cita, ventana)` en `appointment_reminder_delivery`; `FAILED` se reintenta hasta 3 veces.
 - API no disponible: el nodo HTTP reintenta 3 veces y luego toma la rama de error `API no disponible` (Stop and Error) sin enviar correos.
-- JSON versionado: `automations/n8n/WF-001-appointment-reminders.json` con `active: false`, sin `pinData` y con credenciales solo por nombre (`citas-api X-Automation-Key`, `Gmail OAuth2 (gmail.send)`). `scripts/verify-n8n-export.ps1` lo valida en el pre-commit.
+- JSON versionado: `automations/n8n/WF-001-appointment-reminders.json` con `active: false`, sin `pinData` y sin credenciales (re-exportado desde la instancia el 2026-10-03). `scripts/verify-n8n-export.ps1` lo valida en el pre-commit.
 - Acceso desde n8n remoto: ngrok con `automations/ngrok/traffic-policy.yml`, que niega todo fuera de `/api/v1/automation/`.
 - Servidor MCP de la instancia: `https://impulso-n8n.aiacademy.com.co/mcp-server/http` (dato del usuario).
 
