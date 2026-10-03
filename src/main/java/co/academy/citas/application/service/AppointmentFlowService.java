@@ -5,6 +5,7 @@ import co.academy.citas.application.exception.AppointmentNotFoundException;
 import co.academy.citas.application.exception.InvalidAppointmentException;
 import co.academy.citas.application.port.in.AppointmentFlowUseCase;
 import co.academy.citas.application.port.out.AppointmentFlowPort;
+import co.academy.citas.application.port.out.AutomationEventPort;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,7 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class AppointmentFlowService implements AppointmentFlowUseCase {
     private final AppointmentFlowPort port;
     private final Clock clock;
-    public AppointmentFlowService(AppointmentFlowPort port, Clock clock) { this.port = port; this.clock = clock; }
+    private final AutomationEventPort events;
+    public AppointmentFlowService(AppointmentFlowPort port, Clock clock, AutomationEventPort events) {
+        this.port = port; this.clock = clock; this.events = events;
+    }
 
     @Override public void createAvailability(UUID actorId, long locationId, LocalDateTime startsAt, LocalDateTime endsAt) {
         UUID professionalId = port.professionalForUser(actorId).orElseThrow(() -> new InvalidAppointmentException("Professional profile was not found"));
@@ -99,12 +103,14 @@ public class AppointmentFlowService implements AppointmentFlowUseCase {
         if (!command.approve() && (command.reason() == null || command.reason().isBlank())) throw new InvalidAppointmentException("A rejection reason is required");
         String status = command.approve() ? "APPROVED" : "REJECTED";
         if (!port.decide(appointmentId, adminId, status, command.reason())) throw new AppointmentNotFoundException();
+        enqueue("SPECIALIZED_DECISION", status, appointmentId, null);
         return port.findAppointment(appointmentId).orElseThrow();
     }
 
     @Override public void cancel(UUID patientId, UUID appointmentId, String reason) {
         if (!port.cancel(appointmentId, patientId, reason, LocalDateTime.now(clock)))
             throw new AppointmentNotFoundException();
+        enqueue("CANCELLATION", "CANCELLED", appointmentId, null);
     }
     @Override public void closeAppointment(UUID actorId, UUID appointmentId, String status) {
         if (!"COMPLETED".equals(status) && !"NO_SHOW".equals(status))
@@ -133,8 +139,10 @@ public class AppointmentFlowService implements AppointmentFlowUseCase {
                                                                               DecisionCommand command) {
         if (!command.approve() && (command.reason() == null || command.reason().isBlank()))
             throw new InvalidAppointmentException("A rejection reason is required");
-        return port.decideReschedule(requestId, adminId, command.approve(), command.reason())
+        AppointmentFlowPort.RescheduleRequest decided = port.decideReschedule(requestId, adminId, command.approve(), command.reason())
                 .orElseThrow(AppointmentNotFoundException::new);
+        enqueue("RESCHEDULE_DECISION", command.approve() ? "APPROVED" : "REJECTED", decided.appointmentId(), requestId);
+        return decided;
     }
 
     @Override @Transactional(readOnly = true)
@@ -166,5 +174,10 @@ public class AppointmentFlowService implements AppointmentFlowUseCase {
                 .filter(item -> filter.to() == null || !item.startsAt().toLocalDate().isAfter(filter.to()))
                 .sorted(Comparator.comparing(InboxItem::startsAt))
                 .toList();
+    }
+
+    // WF-002 (S6): el evento queda en la misma transacción que la transición; si ésta falla, no hay evento
+    private void enqueue(String type, String status, UUID appointmentId, UUID rescheduleId) {
+        events.enqueue(UUID.randomUUID(), type, status, appointmentId, rescheduleId, LocalDateTime.now(clock));
     }
 }

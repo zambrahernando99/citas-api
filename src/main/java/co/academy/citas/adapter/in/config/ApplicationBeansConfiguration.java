@@ -7,6 +7,8 @@ import co.academy.citas.application.port.out.TokenFingerprintPort;
 import co.academy.citas.application.port.out.UserAccountPort;
 import co.academy.citas.application.service.AuthenticationService;
 import co.academy.citas.application.service.AppointmentFlowService;
+import co.academy.citas.application.service.AppointmentReminderService;
+import co.academy.citas.application.service.AutomationOperationsService;
 import co.academy.citas.application.service.ProfessionalCatalogService;
 import co.academy.citas.application.service.ProfessionalOfferService;
 import co.academy.citas.application.service.RegistrationService;
@@ -19,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
+@org.springframework.scheduling.annotation.EnableScheduling
 public class ApplicationBeansConfiguration {
     @Bean
     Clock clock() {
@@ -32,8 +35,24 @@ public class ApplicationBeansConfiguration {
 
     @Bean
     AppointmentFlowService appointmentFlowService(co.academy.citas.application.port.out.AppointmentFlowPort appointmentFlowPort,
-                                                  Clock clock) {
-        return new AppointmentFlowService(appointmentFlowPort, clock);
+                                                  Clock clock,
+                                                  co.academy.citas.application.port.out.AutomationEventPort automationEventPort) {
+        return new AppointmentFlowService(appointmentFlowPort, clock, automationEventPort);
+    }
+
+    @Bean
+    AutomationOperationsService automationOperationsService(co.academy.citas.application.port.out.AutomationEventPort automationEventPort,
+                                                            co.academy.citas.application.port.out.StatusWebhookPort statusWebhookPort,
+                                                            Clock clock, AutomationProperties automationProperties) {
+        return new AutomationOperationsService(automationEventPort, statusWebhookPort, clock,
+                java.time.ZoneId.of(automationProperties.getZone()), automationProperties.getEventMaxAttempts());
+    }
+
+    @Bean
+    AppointmentReminderService appointmentReminderService(co.academy.citas.application.port.out.AppointmentReminderPort appointmentReminderPort,
+                                                          Clock clock, AutomationProperties automationProperties) {
+        return new AppointmentReminderService(appointmentReminderPort, clock,
+                automationProperties.getDefaultWindowHours(), automationProperties.getMaxAttempts());
     }
 
     @Bean

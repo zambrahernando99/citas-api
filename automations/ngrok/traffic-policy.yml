@@ -1,0 +1,11 @@
+# S5 / WF-001: el túnel ngrok solo expone el contrato de automatización a n8n.
+# Cualquier otra ruta del API (auth, citas, admin, actuator) responde 404 en el borde de ngrok
+# y nunca llega a Spring. Uso:
+#   ngrok http 8080 --traffic-policy-file automations/ngrok/traffic-policy.yml
+on_http_request:
+  - expressions:
+      - "!req.url.path.startsWith('/api/v1/automation/')"
+    actions:
+      - type: deny
+        config:
+          status_code: 404

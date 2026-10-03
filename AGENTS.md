@@ -5,8 +5,8 @@
 `pom.xml` declara Java 21 y Spring Boot 3.5.0. Las HU-001 a HU-028 están aprobadas, implementadas y validadas al cierre de S3/S4 (2026-09-29); la evidencia está en `docs/evidence/s3-s4/` y `docs/evidence/loops/`.
 
 - Paquete raíz: `co.academy.citas`. Dominio: `domain`; casos de uso y puertos: `application`; REST/seguridad: `adapter.in`; JPA/JDBC/JWT/hash: `adapter.out`.
-- Migraciones Flyway V1..V7 (V7 siembra los regímenes fijos; no tienen CRUD, según PRD RF-05).
-- Verificación: `docker compose exec citas-api-dev mvn test` (40 pruebas, H2 en modo MySQL; `ErrorDispatchIntegrationTest` levanta un servidor real). El hook `.githooks/pre-commit` → `scripts/verify-s3.ps1` escanea secretos en lo staged y ejecuta `mvn test` con el Maven local `.tools`.
+- Migraciones Flyway V1..V9 (V7 siembra los regímenes fijos; V8 entregas de recordatorios y V9 outbox de eventos n8n, S5/S6).
+- Verificación: `docker compose exec citas-api-dev mvn test` (73 pruebas, H2 en modo MySQL; `ErrorDispatchIntegrationTest` levanta un servidor real). El hook `.githooks/pre-commit` → `scripts/verify-s3.ps1` escanea secretos en lo staged y ejecuta `mvn test` con el Maven local `.tools`.
 - El contenedor de desarrollo arranca con perfil `dev` (`SPRING_PROFILES_ACTIVE`), lo que expone `debugToken` de recuperación sin SMTP (RF-03). Fuera de `dev`, el token nunca se expone.
 
 ## Responsabilidad

@@ -51,7 +51,7 @@ class AppointmentLifecycleIntegrationTest {
     }
 
     @BeforeEach void setup() {
-        for (String table : new String[]{"appointment_status_history", "professional_slot", "appointment_reschedule", "availability_block",
+        for (String table : new String[]{"automation_event_outbox", "appointment_status_history", "professional_slot", "appointment_reschedule", "availability_block",
                 "appointment_record", "professional_specialty", "professional_location", "professional_profile", "user_account_role", "user_account"})
             jdbc.update("delete from " + table);
         for (UUID id : new UUID[]{PROFESSIONAL_USER, PATIENT, ADMIN, OTHER_PATIENT, OTHER_PROFESSIONAL_USER}) account(id);

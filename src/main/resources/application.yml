@@ -29,6 +29,16 @@ app:
       refresh-ttl-seconds: ${JWT_REFRESH_TTL_SECONDS:604800}
     cors:
       allowed-origins: ${CORS_ALLOWED_ORIGINS:}
+  automation:
+    api-key: ${AUTOMATION_API_KEY:}
+    default-window-hours: ${REMINDER_DEFAULT_WINDOW_HOURS:24}
+    max-attempts: ${REMINDER_MAX_ATTEMPTS:3}
+    zone: ${AUTOMATION_ZONE:America/Bogota}
+    status-webhook-url: ${N8N_STATUS_WEBHOOK_URL:}
+    status-webhook-secret: ${N8N_STATUS_WEBHOOK_SECRET:}
+    event-max-attempts: ${N8N_EVENT_MAX_ATTEMPTS:5}
+    dispatch-enabled: ${N8N_DISPATCH_ENABLED:true}
+    dispatch-interval-ms: ${N8N_DISPATCH_INTERVAL_MS:30000}
   password-reset:
     ttl-seconds: ${PASSWORD_RESET_TTL_SECONDS:900}
     expose-token: ${PASSWORD_RESET_EXPOSE_TOKEN:false}

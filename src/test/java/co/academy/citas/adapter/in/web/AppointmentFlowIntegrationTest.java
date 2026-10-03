@@ -36,7 +36,7 @@ class AppointmentFlowIntegrationTest {
         registry.add("JWT_SECRET", () -> "a".repeat(32)); registry.add("CORS_ALLOWED_ORIGINS", () -> "http://ui.example.test");
     }
     @BeforeEach void setup() {
-        jdbc.update("delete from appointment_status_history"); jdbc.update("delete from professional_slot"); jdbc.update("delete from availability_block"); jdbc.update("delete from appointment_record");
+        jdbc.update("delete from automation_event_outbox"); jdbc.update("delete from appointment_status_history"); jdbc.update("delete from professional_slot"); jdbc.update("delete from availability_block"); jdbc.update("delete from appointment_record");
         jdbc.update("delete from professional_specialty"); jdbc.update("delete from professional_location"); jdbc.update("delete from professional_profile"); jdbc.update("delete from user_account_role"); jdbc.update("delete from user_account");
         user(PROFESSIONAL_USER, "pro@example.test"); user(PATIENT, "user@example.test"); user(ADMIN, "admin@example.test");
         jdbc.update("insert into professional_profile (id,user_id,professional_code,license_number,active) values (?,?,?,?,true)", bytes(PROFESSIONAL),bytes(PROFESSIONAL_USER),"PRO-TEST","LIC-TEST");

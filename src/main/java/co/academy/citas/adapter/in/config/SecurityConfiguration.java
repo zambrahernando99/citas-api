@@ -1,5 +1,6 @@
 package co.academy.citas.adapter.in.config;
 
+import co.academy.citas.adapter.in.security.AutomationApiKeyFilter;
 import co.academy.citas.adapter.in.security.JwtAuthenticationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,6 +33,7 @@ public class SecurityConfiguration {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter,
+                                            AutomationApiKeyFilter automationApiKeyFilter,
                                             ObjectMapper objectMapper) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
@@ -42,6 +44,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/actuator/health").permitAll()
                         // El despacho interno a /error (405/404 del contenedor) no debe convertirse en 401
                         .requestMatchers("/error").permitAll()
+                        // n8n (S5): la API key solo concede ROLE_AUTOMATION y ningún rol de usuario la satisface
+                        .requestMatchers("/api/v1/automation/**").hasRole("AUTOMATION")
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/professional/**").hasRole("PROFESSIONAL")
                         .anyRequest().authenticated())
@@ -49,6 +53,7 @@ public class SecurityConfiguration {
                         .authenticationEntryPoint((request, response, exception) -> writeUnauthorized(response, objectMapper))
                         .accessDeniedHandler((request, response, exception) -> writeForbidden(response, objectMapper)))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(automationApiKeyFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
