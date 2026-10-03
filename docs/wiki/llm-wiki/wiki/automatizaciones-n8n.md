@@ -26,7 +26,7 @@
 ## HECHOS — ejecución real (2026-10-03)
 
 - Los tres workflows se ejecutaron contra la API real por ngrok con credenciales propias del estudiante: WF-001 envió, no duplicó y manejó la API caída; WF-002 (activo) entregó 4 eventos con HTTP 200; WF-003 envió el resumen del día. Evidencia: `docs/evidence/s6/02-ejecucion-real.md` con capturas.
-- WF-002 queda activo; WF-001 y WF-003 inactivos hasta que el estudiante decida activarlos.
+- 2026-10-03: el estudiante decidió dejar activos los tres workflows (WF-001 cada hora, WF-002 webhook, WF-003 a las 20:00 Bogotá). Con la API o ngrok apagados, WF-001 termina en "API no disponible" y WF-003 envía correo de incidencia; es el comportamiento diseñado.
 
 ## PREGUNTAS ABIERTAS
 
