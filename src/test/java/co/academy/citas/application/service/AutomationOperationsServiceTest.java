@@ -42,6 +42,14 @@ class AutomationOperationsServiceTest {
         assertThat(events.marks).containsExactly("FAILED:1:400:rejected_by_webhook");
     }
 
+    @Test void inactiveWorkflowOrAuthErrorsAreRetriedNotDropped() {
+        webhook.status = 404; events.pending.add(event(0, "APPROVED", null));
+        service.dispatchPendingEvents();
+        webhook.status = 403; events.pending.add(event(0, "APPROVED", null));
+        service.dispatchPendingEvents();
+        assertThat(events.marks).containsExactly("RETRY:1:404:http_404:" + NOW.plusMinutes(1), "RETRY:1:403:http_403:" + NOW.plusMinutes(1));
+    }
+
     @Test void serverErrorsAndTimeoutsAreRetriedWithGrowingBackoff() {
         webhook.status = 503; events.pending.add(event(0, "APPROVED", null));
         service.dispatchPendingEvents();

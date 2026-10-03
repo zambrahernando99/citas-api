@@ -15,7 +15,8 @@ import java.util.Map;
 
 /**
  * WF-002 (S6): despacha el outbox al webhook de n8n con reintentos (DEC-018).
- * 2xx = entregado; 4xx (salvo 408/429) = rechazo definitivo del payload; 5xx, 408, 429 o sin respuesta = reintento con espera creciente.
+ * 2xx = entregado; 400/422 = payload rechazado por WF-002, definitivo; cualquier otro código (404 con el flujo inactivo,
+ * 401/403 por credencial, 5xx, 408, 429) o sin respuesta = reintento con espera creciente.
  * WF-003: citas de un día en la zona del laboratorio, solo sede, especialidad, estado y hora (DEC-019).
  */
 public class AutomationOperationsService implements AutomationOperationsUseCase {
@@ -42,7 +43,7 @@ public class AutomationOperationsService implements AutomationOperationsUseCase 
             int status = webhook.send(event.eventId().toString(), payload(event));
             if (status >= 200 && status < 300) {
                 events.markDelivered(event.eventId(), attempt, status, LocalDateTime.now(clock)); delivered++;
-            } else if (status >= 400 && status < 500 && status != 408 && status != 429) {
+            } else if (status == 400 || status == 422) {
                 events.markFailed(event.eventId(), attempt, status, "rejected_by_webhook"); failed++;
             } else if (attempt >= maxAttempts) {
                 events.markFailed(event.eventId(), attempt, status < 0 ? null : status, status < 0 ? "no_response" : "http_" + status); failed++;

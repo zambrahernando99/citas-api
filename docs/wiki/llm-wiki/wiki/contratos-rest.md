@@ -231,7 +231,7 @@ S3 no expone ni implementa bloques de disponibilidad, reservas, slots ni agenda 
 - Productor: `citas-api` escribe un evento en `automation_event_outbox` (V9) **en la misma transacción** que la transición: decisión ADMIN de cita especializada (`SPECIALIZED_DECISION` APPROVED/REJECTED), decisión ADMIN de reprogramación (`RESCHEDULE_DECISION` APPROVED/REJECTED) y cancelación del paciente (`CANCELLATION` CANCELLED). La reserva general y el cierre COMPLETED/NO_SHOW no generan eventos.
 - Envío: `POST N8N_STATUS_WEBHOOK_URL` (solo https; localhost en pruebas) cada 30 s, lotes de 20, con cabeceras `X-Citas-Webhook-Secret` (credencial Header Auth del webhook) y `X-Citas-Event-Id`.
 - Payload v1: `{ schemaVersion: 1, eventId, eventType, status, occurredAt, appointment: { id, startsAt, endsAt, locationName, specialtyName, professionalName }, patient: { firstName, email }, decisionReason }`. Fechas en UTC sin zona. `decisionReason` solo en REJECTED, máximo 300 caracteres.
-- Respuesta determinista del webhook: `200` notificado → `DELIVERED`; `400` payload inválido → `FAILED` sin reintento; `503` Gmail falló, `5xx`, `408`, `429` o sin respuesta → reintento a 1, 5, 15 y 60 min hasta `N8N_EVENT_MAX_ATTEMPTS` (5) y luego `FAILED`.
+- Respuesta determinista del webhook: `200` notificado → `DELIVERED`; `400` o `422` payload inválido → `FAILED` sin reintento; `503` Gmail falló, `404` (flujo inactivo), `401`/`403`, `5xx`, `408`, `429` o sin respuesta → reintento a 1, 5, 15 y 60 min hasta `N8N_EVENT_MAX_ATTEMPTS` (5) y luego `FAILED`.
 
 ## DECISIÓN — Citas del día para WF-003 (S6, 2026-10-01)
 
